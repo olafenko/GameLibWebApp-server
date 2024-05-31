@@ -1,6 +1,7 @@
 package org.backend.gamelibwebapp.services;
 
 import lombok.RequiredArgsConstructor;
+import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.AppUserRole;
@@ -8,13 +9,29 @@ import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
+
+
+    public ResponseEntity<?> login(LoginRequest request){
+
+        if (!appUserRepository.existsByUsername(request.username())){
+            return ResponseEntity.badRequest().body("Username does not match any account!");
+        }
+
+        AppUser userByUsername = appUserRepository.findByUsername(request.username());
+
+        if(!userByUsername.getPassword().equals(request.password())){
+            return ResponseEntity.badRequest().body("Password does not match username!");
+        }
+
+
+        return ResponseEntity.ok("Login successfully!");
+
+    }
 
 
     public ResponseEntity<?> register(RegistrationRequest request){

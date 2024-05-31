@@ -2,7 +2,7 @@ package org.backend.gamelibwebapp.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
+import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.services.AppUserService;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AppUserController {
+public class AuthController {
 
     private final AppUserService appUserService;
 
@@ -23,6 +23,12 @@ public class AppUserController {
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
         log.info("Registration user: {}", request.username());
         return appUserService.register(request);
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request){
+        log.info("Login user: {}", request.username());
+        return appUserService.login(request);
     }
 
 
