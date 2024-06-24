@@ -6,10 +6,12 @@ import org.backend.gamelibwebapp.dto.GameAddRequest;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.repositories.GameRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,27 +46,45 @@ public class GameService {
 
     public ResponseEntity<?> updateById(Long id, UpdateRequest updatedGame){
 
-        Game game = gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game with id " + id + " not found."));
+        Optional<Game> gameOpt = gameRepository.findById(id);
 
-        game.setTitle(updatedGame.title());
-        game.setProducer(updatedGame.producer());
-        game.setGameCategory(updatedGame.gameCategories());
-        game.setImageUrl(updatedGame.imageUrl());
+        if (gameOpt.isPresent()){
+            Game game = gameOpt.get();
 
-        gameRepository.save(game);
+            game.setTitle(updatedGame.title());
+            game.setProducer(updatedGame.producer());
+            game.setGameCategory(updatedGame.gameCategories());
+            game.setImageUrl(updatedGame.imageUrl());
 
-        return ResponseEntity.ok("Game updated successfully!");
+            gameRepository.save(game);
+
+            return ResponseEntity.ok("Game updated successfully!");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game with id "+id+" not found.");
+
+
     }
-
 
     public ResponseEntity<?> deleteById(Long id) {
 
         if(gameRepository.findById(id).isEmpty()){
-            return ResponseEntity.badRequest().body("Id does not match any game.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id" + id + " does not match any game.");
         }
 
         gameRepository.deleteById(id);
 
         return ResponseEntity.ok().body("Game deleted successfully!");
+    }
+
+    public ResponseEntity<?> getGame(Long id){
+
+        Optional<Game> gameOpt = gameRepository.findById(id);
+
+        if (gameOpt.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id " + id + " does not match any game.");
+        }
+
+        return ResponseEntity.ok().body(gameOpt.get());
     }
 }

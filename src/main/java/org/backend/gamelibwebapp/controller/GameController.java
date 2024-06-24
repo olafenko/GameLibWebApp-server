@@ -16,13 +16,13 @@ public class GameController {
 
     private final GameService gameService;
 
-    @PostMapping("/add")
+    @PostMapping("add")
     public ResponseEntity<?> addGame(@RequestBody GameAddRequest request){
         log.info("Adding new game {}",request.title());
         return gameService.addGame(request);
     }
 
-    @GetMapping("/all")
+    @GetMapping("all")
     public ResponseEntity<?> showAllGames(){
         return gameService.showAllGames();
     }
@@ -39,6 +39,13 @@ public class GameController {
         log.info("Updating game with id {}",id);
         return gameService.updateById(id,request);
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id){
+        log.info("Getting game with id {}",id);
+        return gameService.getGame(id);
+    }
+
 
 
 
