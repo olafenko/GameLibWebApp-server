@@ -3,6 +3,8 @@ package org.backend.gamelibwebapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table
 @Builder
@@ -18,7 +20,7 @@ public class Game {
     private String title;
     private String producer;
     @Enumerated(value = EnumType.STRING)
-    private GameCategory gameCategory;
+    private List<GameCategory> gameCategory;
     private String imageUrl;
     private boolean isAccepted;
 
