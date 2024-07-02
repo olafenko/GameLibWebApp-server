@@ -21,6 +21,8 @@ public class Game {
     private String producer;
     @Enumerated(value = EnumType.STRING)
     private List<GameCategory> gameCategory;
+    @OneToMany
+    private List<GameRating> ratings;
     private String imageUrl;
     private boolean isAccepted;
 

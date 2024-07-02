@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 @Service
@@ -30,20 +33,44 @@ public class GameRatingService {
         if(userById.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
+
         if(gameById.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not found.");
         }
 
-        GameRating gameRate = GameRating.builder()
+        if(checkIfRated(request.userId(), request.gameId())) {
+            GameRating ratingUpdate = ratingRepository.getUserRating(request.userId(), request.gameId()).get();
+            ratingUpdate.setRate(request.value());
+            ratingRepository.save(ratingUpdate);
+            return ResponseEntity.ok("Game rating updated.");
+        }
+
+        GameRating rating = GameRating.builder()
                 .rate(request.value())
                 .game(gameById.get())
                 .user(userById.get())
                 .build();
 
-        ratingRepository.save(gameRate);
+        ratingRepository.save(rating);
 
         return ResponseEntity.ok("Game rating added successfully!");
 
+    }
+
+    public double getAverageRating(Game game){
+        double average = game.getRatings().stream()
+                .mapToDouble(GameRating::getRate)
+                .average()
+                .orElse(0);
+
+        BigDecimal roundedAverage = new BigDecimal(average).setScale(1, RoundingMode.HALF_UP);;
+
+        return roundedAverage.doubleValue();
+    }
+
+
+    public boolean checkIfRated(Long userId,Long gameId){
+        return ratingRepository.getUserRating(userId,gameId).isPresent();
     }
 
 
