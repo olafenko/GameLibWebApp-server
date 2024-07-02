@@ -1,7 +1,6 @@
 package org.backend.gamelibwebapp.services;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.backend.gamelibwebapp.dto.GameAddRequest;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
