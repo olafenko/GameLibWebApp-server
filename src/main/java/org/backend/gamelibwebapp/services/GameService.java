@@ -2,6 +2,7 @@ package org.backend.gamelibwebapp.services;
 
 import lombok.RequiredArgsConstructor;
 import org.backend.gamelibwebapp.dto.GameAddRequest;
+import org.backend.gamelibwebapp.dto.GameResponseObj;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.repositories.GameRepository;
@@ -17,11 +18,12 @@ import java.util.Optional;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final GameRatingService ratingService;
 
-    public ResponseEntity<List<Game>> showAllGames(){
+    public ResponseEntity<List<GameResponseObj>> showAllGames(){
         List<Game> allGames = gameRepository.findAll();
 
-        return ResponseEntity.ok().body(allGames);
+        return ResponseEntity.ok().body(mapAllGamesToResponse(allGames));
     }
 
     public ResponseEntity<?> addGame(GameAddRequest gameAddRequest){
@@ -84,6 +86,26 @@ public class GameService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id " + id + " does not match any game.");
         }
 
-        return ResponseEntity.ok().body(gameOpt.get());
+        return ResponseEntity.ok().body(mapToGameResponse(gameOpt.get()));
+    }
+
+
+    private GameResponseObj mapToGameResponse(Game game){
+
+        return GameResponseObj.builder()
+                .title(game.getTitle())
+                .producer(game.getProducer())
+                .categories(game.getGameCategory())
+                .imageUrl(game.getImageUrl())
+                .rating(ratingService.getAverageRating(game))
+                .build();
+
+    }
+
+    private List<GameResponseObj> mapAllGamesToResponse(List<Game> games){
+
+        return games.stream()
+        .map(this::mapToGameResponse)
+        .toList();
     }
 }
