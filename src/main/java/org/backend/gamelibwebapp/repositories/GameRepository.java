@@ -15,5 +15,8 @@ public interface GameRepository extends JpaRepository<Game,Long> {
     @Query(value = "select * from game where is_accepted = 1",nativeQuery = true)
     List<Game> getAccepted();
 
+    @Query(value = "select * from game where is_accepted = 0",nativeQuery = true)
+    List<Game> getNotAccepted();
+
 
 }

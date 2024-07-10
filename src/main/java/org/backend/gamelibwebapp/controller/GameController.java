@@ -24,14 +24,7 @@ public class GameController {
 
     @GetMapping("all")
     public ResponseEntity<?> showAllGames(){
-        return gameService.showAllGames();
-    }
-
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteById (@PathVariable("id") Long id){
-
-        log.info("Deleting game with id {}",id);
-        return gameService.deleteById(id);
+        return gameService.showAcceptedGames();
     }
 
     @PutMapping("update/{id}")
@@ -40,15 +33,16 @@ public class GameController {
         return gameService.updateById(id,request);
     }
 
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteById (@PathVariable("id") Long id){
+        log.info("Deleting game with id {}",id);
+        return gameService.deleteById(id);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long id){
         log.info("Getting game with id {}",id);
         return gameService.getGame(id);
     }
-
-
-
-
-
 
 }

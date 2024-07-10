@@ -34,7 +34,10 @@ public class GameService {
         return ResponseEntity.ok(mapAllGamesToResponse(accepted));
     }
 
-    //USER USAGE
+    public ResponseEntity<List<Game>> showGamesToAccept(){
+        return ResponseEntity.ok(gameRepository.getNotAccepted());
+    }
+
     public ResponseEntity<?> addGame(GameAddRequest gameAddRequest){
 
         if(gameRepository.existsByTitle(gameAddRequest.title())){
@@ -54,7 +57,7 @@ public class GameService {
         return ResponseEntity.ok().body(game);
     }
 
-    //USER AND ADMIN USAGE
+
     public ResponseEntity<?> updateById(Long id, UpdateRequest updatedGame){
 
         Optional<Game> gameOpt = gameRepository.findById(id);
@@ -89,7 +92,7 @@ public class GameService {
         return ResponseEntity.ok().body("Game deleted successfully!");
     }
 
-    //USER AND ADMIN USAGE
+
     public ResponseEntity<?> getGame(Long id){
 
         Optional<Game> gameOpt = gameRepository.findById(id);
@@ -99,6 +102,10 @@ public class GameService {
         }
 
         return ResponseEntity.ok().body(mapToGameResponse(gameOpt.get()));
+    }
+
+    public void acceptGame(Long id){
+        gameRepository.findById(id).ifPresent(game->game.setAccepted(true));
     }
 
 
