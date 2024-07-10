@@ -14,13 +14,6 @@ public class AdminController {
 
     private final GameService gameService;
 
-
-
-    @GetMapping("all")
-    public ResponseEntity<?> showAllGames(){
-        return gameService.showAllGames();
-    }
-
     @GetMapping("to-accept")
     public ResponseEntity<?> showNotAcceptedGames(){
         return gameService.showGamesToAccept();

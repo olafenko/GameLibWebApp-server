@@ -20,12 +20,6 @@ public class GameService {
     private final GameRepository gameRepository;
     private final GameRatingService ratingService;
 
-    //SHOW ALL GAMES FOR ADMIN USAGE
-    public ResponseEntity<List<Game>> showAllGames(){
-        List<Game> allGames = gameRepository.findAll();
-
-        return ResponseEntity.ok().body(allGames);
-    }
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
     public ResponseEntity<List<GameResponseObj>> showAcceptedGames(){
@@ -105,9 +99,11 @@ public class GameService {
     }
 
     public void acceptGame(Long id){
-        gameRepository.findById(id).ifPresent(game->game.setAccepted(true));
-    }
+        Game gameById = gameRepository.findById(id).get();
+        gameById.setAccepted(true);
+        gameRepository.save(gameById);
 
+    }
 
     private GameResponseObj mapToGameResponse(Game game){
 
