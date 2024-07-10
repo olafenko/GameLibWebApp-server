@@ -30,15 +30,15 @@ public class GameRatingService {
         Optional<AppUser> userById = userRepository.findById(request.userId());
         Optional<Game> gameById = gameRepository.findById(request.gameId());
 
-        if(userById.isEmpty()){
+        if (userById.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
 
-        if(gameById.isEmpty()){
+        if (gameById.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not found.");
         }
 
-        if(checkIfRated(request.userId(), request.gameId())) {
+        if (checkIfRated(request.userId(), request.gameId())) {
             GameRating ratingUpdate = ratingRepository.getUserRating(request.userId(), request.gameId()).get();
             ratingUpdate.setRate(request.value());
             ratingRepository.save(ratingUpdate);
@@ -51,6 +51,8 @@ public class GameRatingService {
                 .user(userById.get())
                 .build();
 
+        gameById.get().getRatings().add(rating);
+
         ratingRepository.save(rating);
 
         return ResponseEntity.ok("Game rating added successfully!");
@@ -61,7 +63,7 @@ public class GameRatingService {
         double average = game.getRatings().stream()
                 .mapToDouble(GameRating::getRate)
                 .average()
-                .orElse(0);
+                .orElse(0d);
 
         BigDecimal roundedAverage = new BigDecimal(average).setScale(1, RoundingMode.HALF_UP);;
 
