@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.Optional;
 
 @Service
@@ -65,7 +64,7 @@ public class GameRatingService {
                 .average()
                 .orElse(0d);
 
-        BigDecimal roundedAverage = new BigDecimal(average).setScale(1, RoundingMode.HALF_UP);;
+        BigDecimal roundedAverage = new BigDecimal(average).setScale(1, RoundingMode.HALF_UP);
 
         return roundedAverage.doubleValue();
     }
