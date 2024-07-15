@@ -5,6 +5,7 @@ import org.backend.gamelibwebapp.dto.GameAddRequest;
 import org.backend.gamelibwebapp.dto.GameResponseObj;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
+import org.backend.gamelibwebapp.repositories.GameRatingRepository;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final GameRatingService ratingService;
-
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
     public ResponseEntity<List<GameResponseObj>> showAcceptedGames(){
@@ -83,6 +83,7 @@ public class GameService {
 
         gameRepository.deleteById(id);
 
+
         return ResponseEntity.ok().body("Game deleted successfully!");
     }
 
@@ -91,18 +92,20 @@ public class GameService {
 
         Optional<Game> gameOpt = gameRepository.findById(id);
 
-        if (gameOpt.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id " + id + " does not match any game.");
+        if (gameOpt.isPresent() && gameOpt.get().isAccepted()){
+            return ResponseEntity.ok().body(mapToGameResponse(gameOpt.get()));
+
         }
 
-        return ResponseEntity.ok().body(mapToGameResponse(gameOpt.get()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot get this game.");
     }
 
-    public void acceptGame(Long id){
+    public ResponseEntity<?> acceptGame(Long id){
         Game gameById = gameRepository.findById(id).get();
         gameById.setAccepted(true);
         gameRepository.save(gameById);
 
+        return ResponseEntity.ok().body("Game accepted.");
     }
 
     private GameResponseObj mapToGameResponse(Game game){

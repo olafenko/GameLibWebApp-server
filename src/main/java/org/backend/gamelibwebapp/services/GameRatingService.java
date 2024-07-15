@@ -29,12 +29,8 @@ public class GameRatingService {
         Optional<AppUser> userById = userRepository.findById(request.userId());
         Optional<Game> gameById = gameRepository.findById(request.gameId());
 
-        if (userById.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-
-        if (gameById.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not found.");
+        if (userById.isEmpty() || gameById.isEmpty() || !gameById.get().isAccepted()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot perform this action.");
         }
 
         if (checkIfRated(request.userId(), request.gameId())) {

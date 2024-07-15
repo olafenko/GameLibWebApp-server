@@ -2,6 +2,8 @@ package org.backend.gamelibwebapp.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table
@@ -22,6 +24,7 @@ public class GameRating {
     private AppUser user;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Game game;
 
 

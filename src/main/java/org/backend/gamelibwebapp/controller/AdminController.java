@@ -20,8 +20,8 @@ public class AdminController {
     }
 
     @PostMapping("accept/{id}")
-    public void acceptGame(@PathVariable("id") Long id){
-        gameService.acceptGame(id);
+    public ResponseEntity<?> acceptGame(@PathVariable("id") Long id){
+        return gameService.acceptGame(id);
     }
 
     @DeleteMapping("reject/{id}")
