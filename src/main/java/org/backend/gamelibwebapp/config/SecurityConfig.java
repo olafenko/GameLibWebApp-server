@@ -32,7 +32,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/game/all").permitAll()
                         .requestMatchers("/api/game/**","/api/rating/**").hasAnyRole("USER", "ADMIN")
-                        //NARAZIE UPRAWIENIA DLA WSZYSTKICH DLA TESTU, POTEM DO ZMIANY
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                     .httpBasic(Customizer.withDefaults())
