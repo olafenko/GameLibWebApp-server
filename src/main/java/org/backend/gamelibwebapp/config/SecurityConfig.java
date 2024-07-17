@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,8 +25,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/game/all").permitAll()
                         .requestMatchers("/api/game/**","/api/rating/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        //NARAZIE UPRAWIENIA DLA WSZYSTKICH DLA TESTU, POTEM DO ZMIANY
+                        .requestMatchers("/api/admin/**").permitAll()
                         .anyRequest().authenticated())
                     .httpBasic(Customizer.withDefaults())
                     .formLogin(Customizer.withDefaults());
