@@ -31,6 +31,4 @@ public class AuthController {
         return appUserService.login(request);
     }
 
-
-
 }

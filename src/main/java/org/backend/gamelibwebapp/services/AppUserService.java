@@ -7,6 +7,7 @@ import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.AppUserRole;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     public ResponseEntity<?> login(LoginRequest request){
@@ -44,10 +46,12 @@ public class AppUserService {
             return ResponseEntity.badRequest().body("Username is already taken!");
         }
 
+        String encodedPassword = passwordEncoder.encode(request.password());
+
         AppUser user = AppUser.builder()
                 .username(request.username())
                 .email(request.email())
-                .password(request.password())
+                .password(encodedPassword)
                 .appUserRole(AppUserRole.USER)
                 .build();
 
