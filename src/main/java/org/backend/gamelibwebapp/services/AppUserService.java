@@ -7,9 +7,11 @@ import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.AppUserRole;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class AppUserService implements UserDetailsService {
 
     private final AppUserRepository appUserRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
 
     public ResponseEntity<?> login(LoginRequest request){
@@ -32,7 +34,6 @@ public class AppUserService implements UserDetailsService {
         if(!userByUsername.getPassword().equals(request.password())){
             return ResponseEntity.badRequest().body("Password does not match username!");
         }
-
 
         return ResponseEntity.ok("Login successfully!");
 
@@ -67,4 +68,6 @@ public class AppUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return appUserRepository.findByUsername(username);
     }
+
+
 }
