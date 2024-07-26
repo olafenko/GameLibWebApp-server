@@ -18,7 +18,7 @@ public class GameRating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rate;
+    private double rate;
 
     @ManyToOne
     private AppUser user;

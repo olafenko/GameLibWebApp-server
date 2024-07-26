@@ -1,4 +1,4 @@
 package org.backend.gamelibwebapp.dto;
 
-public record RatingRequest(int value,Long gameId, Long userId) {
+public record RatingRequest(double value,Long gameId, Long userId) {
 }
