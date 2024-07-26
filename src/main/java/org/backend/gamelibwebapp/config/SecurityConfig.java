@@ -24,8 +24,10 @@ public class SecurityConfig {
 
     private final BCryptPasswordEncoder passwordEncoder;
 
+    private final AuthenticationProvider authenticationProvider;
+
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
             http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -38,18 +40,11 @@ public class SecurityConfig {
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider());
+                .authenticationProvider(authenticationProvider);
 
             return http.build();
 
     }
 
-    @Bean
-    protected AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 
-        return daoAuthenticationProvider;
-    }
 }
