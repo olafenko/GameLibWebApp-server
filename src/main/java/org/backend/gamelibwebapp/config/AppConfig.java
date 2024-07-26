@@ -3,6 +3,7 @@ package org.backend.gamelibwebapp.config;
 import lombok.RequiredArgsConstructor;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.AppUserRole;
+import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.backend.gamelibwebapp.services.AppUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @RequiredArgsConstructor
 public class AppConfig {
 
+    private final AppUserRepository appUserRepository;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -26,5 +29,10 @@ public class AppConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
         return builder.getAuthenticationManager();
     }
+
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return appUserRepository.findByUsername(username)
+//    }
 
 }
