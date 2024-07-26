@@ -17,9 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class AppUserService implements UserDetailsService {
+public class AppUserService {
 
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -27,13 +29,13 @@ public class AppUserService implements UserDetailsService {
 
     public ResponseEntity<?> login(LoginRequest request){
 
-        if (!appUserRepository.existsByUsername(request.username())){
+        Optional<AppUser> userByUsername = appUserRepository.findByUsername(request.username());
+
+        if (userByUsername.isEmpty()){
             return ResponseEntity.badRequest().body("Username does not match any account!");
         }
 
-        AppUser userByUsername = appUserRepository.findByUsername(request.username());
-
-        if(!userByUsername.getPassword().equals(request.password())){
+        if(!userByUsername.get().getPassword().equals(request.password())){
             return ResponseEntity.badRequest().body("Password does not match username!");
         }
 
@@ -66,9 +68,6 @@ public class AppUserService implements UserDetailsService {
         return ResponseEntity.ok("User registered successfully!");
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return appUserRepository.findByUsername(username);
-    }
+
 
 }
