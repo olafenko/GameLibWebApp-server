@@ -1,12 +1,17 @@
 package org.backend.gamelibwebapp.services;
 
 import lombok.RequiredArgsConstructor;
+import org.backend.gamelibwebapp.dto.AuthResponse;
 import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.enums.AppUserRole;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
+import org.backend.gamelibwebapp.security.JwtService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +19,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AppUserService {
+public class AuthService {
 
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
-
-
-    public ResponseEntity<?> login(LoginRequest request){
-
-        Optional<AppUser> userByUsername = appUserRepository.findByUsername(request.username());
-
-        if (userByUsername.isEmpty()){
-            return ResponseEntity.badRequest().body("Username does not match any account!");
-        }
-
-        if(!userByUsername.get().getPassword().equals(request.password())){
-            return ResponseEntity.badRequest().body("Password does not match username!");
-        }
-
-        return ResponseEntity.ok("Login successfully!");
-
-    }
-
+    private final JwtService jwtService;
+    private final AuthenticationManager authManager;
 
     public ResponseEntity<?> register(RegistrationRequest request){
 
@@ -47,18 +36,30 @@ public class AppUserService {
             return ResponseEntity.badRequest().body("Username is already taken!");
         }
 
-        String encodedPassword = passwordEncoder.encode(request.password());
-
         AppUser user = AppUser.builder()
                 .username(request.username())
                 .email(request.email())
-                .password(encodedPassword)
+                .password(passwordEncoder.encode(request.password()))
                 .appUserRole(AppUserRole.ROLE_USER)
                 .build();
 
         appUserRepository.save(user);
 
-        return ResponseEntity.ok("User registered successfully!");
+        String jwt = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(new AuthResponse(jwt));
+    }
+
+    public AuthResponse login(LoginRequest loginRequest){
+
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
+
+        AppUser user = appUserRepository.findByUsername(loginRequest.username()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String jwt = jwtService.generateToken(user);
+
+        return new AuthResponse(jwt);
+
     }
 
 
