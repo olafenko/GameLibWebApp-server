@@ -1,4 +1,4 @@
-package org.backend.gamelibwebapp.entities;
+package org.backend.gamelibwebapp.entities.enums;
 
 public enum GameCategory {
 

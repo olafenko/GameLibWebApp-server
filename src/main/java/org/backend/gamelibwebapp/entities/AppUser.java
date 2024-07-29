@@ -2,6 +2,7 @@ package org.backend.gamelibwebapp.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.backend.gamelibwebapp.entities.enums.AppUserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

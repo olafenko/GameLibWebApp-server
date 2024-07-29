@@ -1,4 +1,4 @@
-package org.backend.gamelibwebapp.services;
+package org.backend.gamelibwebapp.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -35,7 +35,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims  extractClaims(String token) {
+    private Claims extractClaims(String token) {
 
         return Jwts.parser()
                 .verifyWith(getSigningKey())

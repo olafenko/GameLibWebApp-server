@@ -2,6 +2,7 @@ package org.backend.gamelibwebapp.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.backend.gamelibwebapp.entities.enums.GameCategory;
 
 import java.util.List;
 

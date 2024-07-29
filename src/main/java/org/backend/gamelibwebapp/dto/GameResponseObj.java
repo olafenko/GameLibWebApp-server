@@ -1,7 +1,7 @@
 package org.backend.gamelibwebapp.dto;
 
 import lombok.Builder;
-import org.backend.gamelibwebapp.entities.GameCategory;
+import org.backend.gamelibwebapp.entities.enums.GameCategory;
 
 import java.util.List;
 

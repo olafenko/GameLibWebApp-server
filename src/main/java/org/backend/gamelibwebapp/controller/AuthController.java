@@ -19,7 +19,7 @@ public class AuthController {
 
     private final AppUserService appUserService;
 
-    @PostMapping("signup")
+    @PostMapping("register")
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
         log.info("Registration user: {}", request.username());
         return appUserService.register(request);
