@@ -1,6 +1,5 @@
 package org.backend.gamelibwebapp.repositories;
 
-import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.entities.GameRating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

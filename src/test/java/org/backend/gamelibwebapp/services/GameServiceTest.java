@@ -1,10 +1,15 @@
 package org.backend.gamelibwebapp.services;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@RequiredArgsConstructor
 class GameServiceTest {
+
+    private final GameService gameService;
+
 
     @Test
     void showAcceptedGames() {
