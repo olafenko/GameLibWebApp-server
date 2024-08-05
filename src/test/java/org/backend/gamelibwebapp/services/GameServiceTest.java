@@ -1,18 +1,38 @@
 package org.backend.gamelibwebapp.services;
 
-import lombok.RequiredArgsConstructor;
+import org.backend.gamelibwebapp.repositories.GameRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-@RequiredArgsConstructor
 class GameServiceTest {
 
-    private final GameService gameService;
+    private  GameService underTestGameService;
 
+    @Mock
+    private  GameRatingService gameRatingService;
+
+    @Mock
+    private GameRepository gameRepository;
+
+    @BeforeEach
+    void setUp() {
+        underTestGameService = new GameService(gameRepository,gameRatingService);
+    }
 
     @Test
-    void showAcceptedGames() {
+    void should_return_list_of_accepted_games() {
+
+        //given
+        //when
+
+        underTestGameService.showAcceptedGames();
+
+        //then
+
+
     }
 
     @Test
