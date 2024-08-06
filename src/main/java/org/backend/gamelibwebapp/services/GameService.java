@@ -24,7 +24,6 @@ public class GameService {
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
     public ResponseEntity<List<GameResponseObj>> showAcceptedGames(){
         List<Game> accepted = gameRepository.getAccepted();
-
         return ResponseEntity.ok(mapAllGamesToResponse(accepted));
     }
 
@@ -37,6 +36,7 @@ public class GameService {
         if(gameRepository.existsByTitle(gameAddRequest.title())){
             return ResponseEntity.badRequest().body("This game already exists.");
         }
+        //ZMIANA NA RZUCANIE WYJĄTKOW
 
         Game game = Game.builder()
                 .title(gameAddRequest.title())
@@ -56,22 +56,20 @@ public class GameService {
 
         Optional<Game> gameOpt = gameRepository.findById(id);
 
-        if (gameOpt.isPresent()){
-            Game game = gameOpt.get();
-
-            game.setTitle(updatedGame.title());
-            game.setProducer(updatedGame.producer());
-            game.setGameCategory(updatedGame.gameCategories());
-            game.setImageUrl(updatedGame.imageUrl());
-
-            gameRepository.save(game);
-
-            return ResponseEntity.ok("Game updated successfully!");
+        if (gameOpt.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game with id "+id+" not found.");
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game with id "+id+" not found.");
+        Game game = gameOpt.get();
 
+        game.setTitle(updatedGame.title());
+        game.setProducer(updatedGame.producer());
+        game.setGameCategory(updatedGame.gameCategories());
+        game.setImageUrl(updatedGame.imageUrl());
 
+        gameRepository.save(game);
+
+        return ResponseEntity.ok("Game updated successfully!");
     }
 
     //ADMIN USAGE

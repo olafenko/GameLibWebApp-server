@@ -3,6 +3,7 @@ package org.backend.gamelibwebapp.repositories;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.entities.GameRating;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -23,10 +24,17 @@ class GameRatingRepositoryTest {
     @Autowired
     private AppUserRepository appUserRepository;
 
+
+    @BeforeEach
+    void setUp() {
+        underTestRepository.deleteAll();
+    }
+
     @Test
     void should_get_user_rating_by_game_and_user_id_and_return_game_rating_class() {
 
         //given
+
         AppUser testUser = new AppUser(1L,null, null, null, null);
         appUserRepository.save(testUser);
         Game testGame = new Game(1L,null, null, null, null, null, false);

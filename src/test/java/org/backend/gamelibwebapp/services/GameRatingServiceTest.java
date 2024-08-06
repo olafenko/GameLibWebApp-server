@@ -6,15 +6,18 @@ import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class GameRatingServiceTest {
 
-    @Autowired
+
     private GameRatingService underTestService;
 
     @Mock
@@ -24,20 +27,15 @@ class GameRatingServiceTest {
     @Mock
     private AppUserRepository appUserRepository;
 
+
     @BeforeEach
     void setUp() {
-
-        AutoCloseable autoCloseable = MockitoAnnotations.openMocks(this);
-
         underTestService = new GameRatingService(appUserRepository,gameRepository,gameRatingRepository);
-    }
-
-    @AfterEach
-    void tearDown() {
     }
 
     @Test
     void rateGame() {
+
     }
 
     @Test
