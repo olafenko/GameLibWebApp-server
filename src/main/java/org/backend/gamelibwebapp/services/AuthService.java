@@ -9,14 +9,11 @@ import org.backend.gamelibwebapp.entities.enums.AppUserRole;
 import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.backend.gamelibwebapp.security.JwtService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

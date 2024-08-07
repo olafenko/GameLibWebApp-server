@@ -8,14 +8,10 @@ import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.exception.CannotPerformActionException;
 import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
 import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
-import org.backend.gamelibwebapp.repositories.GameRatingRepository;
 import org.backend.gamelibwebapp.repositories.GameRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -5,16 +5,15 @@ import org.backend.gamelibwebapp.dto.RatingRequest;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.entities.GameRating;
+import org.backend.gamelibwebapp.exception.CannotPerformActionException;
+import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.backend.gamelibwebapp.repositories.GameRatingRepository;
 import org.backend.gamelibwebapp.repositories.GameRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,33 +23,33 @@ public class GameRatingService {
     private final GameRepository gameRepository;
     private final GameRatingRepository ratingRepository;
 
-    public ResponseEntity<?> rateGame(RatingRequest request){
+    public GameRating rateGame(RatingRequest request){
 
-        Optional<AppUser> userById = userRepository.findById(request.userId());
-        Optional<Game> gameById = gameRepository.findById(request.gameId());
+        AppUser userById = userRepository.findById(request.userId()).orElseThrow(() -> new ResourceNotFoundException("User with id " + request.userId() + " not found"));
+        Game gameById = gameRepository.findById(request.gameId()).orElseThrow(() -> new ResourceNotFoundException("Game with id " + request.gameId() + " not found"));
 
-        if (userById.isEmpty() || gameById.isEmpty() || !gameById.get().isAccepted()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot perform this action.");
+        if (!gameById.isAccepted()){
+            throw new CannotPerformActionException("Cannot rate not accepted game.");
         }
 
         if (checkIfRated(request.userId(), request.gameId())) {
             GameRating ratingUpdate = ratingRepository.getUserRating(request.userId(), request.gameId()).get();
             ratingUpdate.setRate(request.value());
             ratingRepository.save(ratingUpdate);
-            return ResponseEntity.ok("Game rating updated.");
+            return ratingUpdate;
         }
 
         GameRating rating = GameRating.builder()
                 .rate(request.value())
-                .game(gameById.get())
-                .user(userById.get())
+                .game(gameById)
+                .user(userById)
                 .build();
 
-        gameById.get().getRatings().add(rating);
+        gameById.getRatings().add(rating);
 
         ratingRepository.save(rating);
 
-        return ResponseEntity.ok("Game rating added successfully!");
+        return rating;
 
     }
 
