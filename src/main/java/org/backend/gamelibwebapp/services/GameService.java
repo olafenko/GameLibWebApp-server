@@ -5,6 +5,9 @@ import org.backend.gamelibwebapp.dto.GameAddRequest;
 import org.backend.gamelibwebapp.dto.GameResponseObj;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
+import org.backend.gamelibwebapp.exception.CannotPerformActionException;
+import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
+import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
 import org.backend.gamelibwebapp.repositories.GameRatingRepository;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.springframework.http.HttpStatus;
@@ -20,23 +23,23 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final GameRatingService ratingService;
+    private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
-    public ResponseEntity<List<GameResponseObj>> showAcceptedGames(){
+    public List<GameResponseObj> showAcceptedGames(){
         List<Game> accepted = gameRepository.getAccepted();
-        return ResponseEntity.ok(mapAllGamesToResponse(accepted));
+        return mapAllGamesToResponse(accepted);
     }
 
-    public ResponseEntity<List<Game>> showGamesToAccept(){
-        return ResponseEntity.ok(gameRepository.getNotAccepted());
+    public List<Game> showGamesToAccept(){
+        return gameRepository.getNotAccepted();
     }
 
-    public ResponseEntity<?> addGame(GameAddRequest gameAddRequest){
+    public Game addGame(GameAddRequest gameAddRequest){
 
         if(gameRepository.existsByTitle(gameAddRequest.title())){
-            return ResponseEntity.badRequest().body("This game already exists.");
+            throw new ResourceAlreadyExistsException("Game \"" + gameAddRequest.title() + "\" already exists.");
         }
-        //ZMIANA NA RZUCANIE WYJĄTKOW
 
         Game game = Game.builder()
                 .title(gameAddRequest.title())
@@ -48,62 +51,52 @@ public class GameService {
 
         gameRepository.save(game);
 
-        return ResponseEntity.ok().body(game);
+        return game;
     }
 
 
-    public ResponseEntity<?> updateById(Long id, UpdateRequest updatedGame){
+    public GameResponseObj updateById(Long id, UpdateRequest updatedGame){
 
-        Optional<Game> gameOpt = gameRepository.findById(id);
+        Game gameToUpdate = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
-        if (gameOpt.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game with id "+id+" not found.");
-        }
+        gameToUpdate.setTitle(updatedGame.title());
+        gameToUpdate.setProducer(updatedGame.producer());
+        gameToUpdate.setGameCategory(updatedGame.gameCategories());
+        gameToUpdate.setImageUrl(updatedGame.imageUrl());
 
-        Game game = gameOpt.get();
+        gameRepository.save(gameToUpdate);
 
-        game.setTitle(updatedGame.title());
-        game.setProducer(updatedGame.producer());
-        game.setGameCategory(updatedGame.gameCategories());
-        game.setImageUrl(updatedGame.imageUrl());
-
-        gameRepository.save(game);
-
-        return ResponseEntity.ok("Game updated successfully!");
+        return mapToGameResponse(gameToUpdate);
     }
 
     //ADMIN USAGE
-    public ResponseEntity<?> deleteById(Long id) {
+    public String deleteById(Long id) {
 
-        if(gameRepository.findById(id).isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id" + id + " does not match any game.");
-        }
+        Game gameToDelete = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
         gameRepository.deleteById(id);
 
-
-        return ResponseEntity.ok().body("Game deleted successfully!");
+        return gameToDelete.getTitle() + "deleted successfully.";
     }
 
 
-    public ResponseEntity<?> getGame(Long id){
+    public GameResponseObj getGame(Long id){
 
-        Optional<Game> gameOpt = gameRepository.findById(id);
+        Game game = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
-        if (gameOpt.isPresent() && gameOpt.get().isAccepted()){
-            return ResponseEntity.ok().body(mapToGameResponse(gameOpt.get()));
-
+        if (!game.isAccepted()){
+            throw new CannotPerformActionException("Cannot get not accepted game");
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot get this game.");
+        return mapToGameResponse(game);
     }
 
-    public ResponseEntity<?> acceptGame(Long id){
-        Game gameById = gameRepository.findById(id).get();
+    public Game acceptGame(Long id){
+        Game gameById = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
         gameById.setAccepted(true);
         gameRepository.save(gameById);
 
-        return ResponseEntity.ok().body("Game accepted.");
+        return gameById;
     }
 
     private GameResponseObj mapToGameResponse(Game game){
