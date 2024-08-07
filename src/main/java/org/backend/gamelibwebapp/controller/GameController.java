@@ -2,7 +2,6 @@ package org.backend.gamelibwebapp.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.backend.gamelibwebapp.dto.GameAddRequest;
 import org.backend.gamelibwebapp.dto.GameResponseObj;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
