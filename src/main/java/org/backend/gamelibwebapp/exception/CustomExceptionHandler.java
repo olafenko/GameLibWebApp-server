@@ -2,6 +2,7 @@ package org.backend.gamelibwebapp.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -20,7 +21,6 @@ public class CustomExceptionHandler {
         public ResponseEntity<String> handleCannotPerformActionException(CannotPerformActionException ex) {
                 return new ResponseEntity<String>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
-
 
 
 }

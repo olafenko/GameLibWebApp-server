@@ -72,7 +72,7 @@ public class GameService {
 
         gameRepository.deleteById(id);
 
-        return gameToDelete.getTitle() + "deleted successfully.";
+        return gameToDelete.getTitle() + " deleted successfully.";
     }
 
 
