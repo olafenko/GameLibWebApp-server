@@ -6,6 +6,7 @@ import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.enums.AppUserRole;
+import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.backend.gamelibwebapp.security.JwtService;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,14 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
-    public ResponseEntity<?> register(RegistrationRequest request){
+    public String register(RegistrationRequest request){
 
         if (appUserRepository.existsByEmail(request.email())){
-            return ResponseEntity.badRequest().body("Email is already taken!");
+            throw new ResourceAlreadyExistsException("Email is already taken!");
         }
 
         if (appUserRepository.existsByUsername(request.username())){
-            return ResponseEntity.badRequest().body("Username is already taken!");
+            throw new ResourceAlreadyExistsException("Username is already taken!");
         }
 
         AppUser user = AppUser.builder()
@@ -45,9 +46,7 @@ public class AuthService {
 
         appUserRepository.save(user);
 
-        String jwt = jwtService.generateToken(user);
-
-        return ResponseEntity.ok(new AuthResponse(jwt));
+        return jwtService.generateToken(user);
     }
 
     public AuthResponse login(LoginRequest loginRequest){
