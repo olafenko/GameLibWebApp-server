@@ -22,18 +22,18 @@ public class GameService {
     private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
-    public List<GameResponseObj> showAcceptedGames(){
+    public List<GameResponseObj> showAcceptedGames() {
         List<Game> accepted = gameRepository.getAccepted();
         return mapAllGamesToResponse(accepted);
     }
 
-    public List<Game> showGamesToAccept(){
+    public List<Game> showGamesToAccept() {
         return gameRepository.getNotAccepted();
     }
 
-    public Game addGame(GameAddRequest gameAddRequest){
+    public Game addGame(GameAddRequest gameAddRequest) {
 
-        if(gameRepository.existsByTitle(gameAddRequest.title())){
+        if (gameRepository.existsByTitle(gameAddRequest.title())) {
             throw new ResourceAlreadyExistsException("Game \"" + gameAddRequest.title() + "\" already exists.");
         }
 
@@ -51,7 +51,7 @@ public class GameService {
     }
 
 
-    public GameResponseObj updateById(Long id, UpdateRequest updatedGame){
+    public GameResponseObj updateById(Long id, UpdateRequest updatedGame) {
 
         Game gameToUpdate = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
@@ -76,18 +76,18 @@ public class GameService {
     }
 
 
-    public GameResponseObj getGame(Long id){
+    public GameResponseObj getGame(Long id) {
 
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
-        if (!game.isAccepted()){
+        if (!game.isAccepted()) {
             throw new CannotPerformActionException("Cannot get not accepted game");
         }
 
         return mapToGameResponse(game);
     }
 
-    public Game acceptGame(Long id){
+    public Game acceptGame(Long id) {
         Game gameById = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
         gameById.setAccepted(true);
         gameRepository.save(gameById);
@@ -95,7 +95,7 @@ public class GameService {
         return gameById;
     }
 
-    private GameResponseObj mapToGameResponse(Game game){
+    private GameResponseObj mapToGameResponse(Game game) {
 
         return GameResponseObj.builder()
                 .title(game.getTitle())
@@ -107,10 +107,10 @@ public class GameService {
 
     }
 
-    private List<GameResponseObj> mapAllGamesToResponse(List<Game> games){
+    private List<GameResponseObj> mapAllGamesToResponse(List<Game> games) {
 
         return games.stream()
-        .map(this::mapToGameResponse)
-        .toList();
+                .map(this::mapToGameResponse)
+                .toList();
     }
 }
