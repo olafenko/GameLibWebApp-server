@@ -65,10 +65,8 @@ public class GameRatingService {
     }
 
 
-    public boolean checkIfRated(Long userId,Long gameId){
+    private boolean checkIfRated(Long userId,Long gameId){
         return ratingRepository.getUserRating(userId,gameId).isPresent();
     }
-
-
 
 }

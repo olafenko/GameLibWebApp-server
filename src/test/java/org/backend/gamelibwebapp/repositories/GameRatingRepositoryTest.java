@@ -5,6 +5,7 @@ import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.entities.GameRating;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -19,9 +20,10 @@ class GameRatingRepositoryTest {
 
     @Autowired
     private  GameRatingRepository underTestRepository;
-    @Autowired
+
+    @Mock
     private GameRepository gameRepository;
-    @Autowired
+    @Mock
     private AppUserRepository appUserRepository;
 
 
@@ -37,6 +39,7 @@ class GameRatingRepositoryTest {
 
         AppUser testUser = new AppUser(1L,null, null, null, null);
         appUserRepository.save(testUser);
+
         Game testGame = new Game(1L,null, null, null, null, null, false);
         gameRepository.save(testGame);
 
