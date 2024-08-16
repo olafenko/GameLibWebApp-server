@@ -12,8 +12,8 @@ import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.verify;
 @ExtendWith(MockitoExtension.class)
 class GameRatingServiceTest {
 
-
+    @InjectMocks
     private GameRatingService underTestService;
 
     @Mock
@@ -43,7 +43,7 @@ class GameRatingServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTestService = Mockito.spy(new GameRatingService(appUserRepository, gameRepository, gameRatingRepository));
+        underTestService = new GameRatingService(appUserRepository, gameRepository, gameRatingRepository);
     }
 
 
