@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
@@ -21,9 +22,9 @@ class GameRatingRepositoryTest {
     @Autowired
     private  GameRatingRepository underTestRepository;
 
-    @Mock
+    @Autowired
     private GameRepository gameRepository;
-    @Mock
+    @Autowired
     private AppUserRepository appUserRepository;
 
 
@@ -59,9 +60,9 @@ class GameRatingRepositoryTest {
 
         //given
         //when
-        Optional<GameRating> result = underTestRepository.getUserRating(0L, 0L);
         //then
-        assertThrows(NoSuchElementException.class, result::get);
+        assertThatThrownBy( () -> underTestRepository.getUserRating(0L, 0L).get())
+                .isInstanceOf(NoSuchElementException.class);
 
     }
 }
