@@ -7,6 +7,7 @@ import org.backend.gamelibwebapp.dto.GameResponseObj;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.services.GameService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class GameController {
     @PostMapping("add")
     public ResponseEntity<Game> addGame(@RequestBody GameAddRequest request){
         log.info("Adding new game {}",request.title());
-        return ResponseEntity.ok(gameService.addGame(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(gameService.addGame(request));
     }
 
     @GetMapping("all")
@@ -48,5 +49,7 @@ public class GameController {
         log.info("Getting game with id {}",id);
         return ResponseEntity.ok(gameService.getGame(id));
     }
+
+
 
 }
