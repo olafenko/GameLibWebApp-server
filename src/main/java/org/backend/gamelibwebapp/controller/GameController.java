@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/game")
+@RequestMapping("api/games")
 @RequiredArgsConstructor
 @Slf4j
 public class GameController {

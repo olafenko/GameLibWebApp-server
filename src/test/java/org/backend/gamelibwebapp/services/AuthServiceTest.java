@@ -5,7 +5,6 @@ import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
-import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
 import org.backend.gamelibwebapp.repositories.AppUserRepository;
 import org.backend.gamelibwebapp.security.JwtService;
 import org.junit.jupiter.api.Test;
