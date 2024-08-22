@@ -26,8 +26,8 @@ public class SecurityConfig {
             http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
-                    .requestMatchers("/api/auth/**","/api/game/all").permitAll()
-                    .requestMatchers("/api/game/**","/api/rating/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/api/auth/**","/api/games/all").permitAll()
+                    .requestMatchers("/api/games/**","/api/ratings/**").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
