@@ -7,7 +7,7 @@ import org.backend.gamelibwebapp.entities.enums.GameCategory;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "games")
 @Builder
 @Getter
 @Setter

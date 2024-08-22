@@ -6,7 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table
+@Table(name = "game_ratings")
 @Builder
 @Getter
 @Setter
