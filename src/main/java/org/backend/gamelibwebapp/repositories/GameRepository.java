@@ -12,10 +12,10 @@ public interface GameRepository extends JpaRepository<Game,Long> {
 
     boolean existsByTitle(String title);
 
-    @Query(value = "select * from game where is_accepted = true",nativeQuery = true)
+    @Query(value = "select * from games where is_accepted = true",nativeQuery = true)
     List<Game> getAccepted();
 
-    @Query(value = "select * from game where is_accepted = false",nativeQuery = true)
+    @Query(value = "select * from games where is_accepted = false",nativeQuery = true)
     List<Game> getNotAccepted();
 
 
