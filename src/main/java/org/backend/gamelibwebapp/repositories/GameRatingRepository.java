@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface GameRatingRepository extends JpaRepository<GameRating,Long> {
 
-    @Query(value = "select * from game_rating where user_id=:user_id and game_id=:game_id", nativeQuery = true)
+    @Query(value = "select * from game_ratings where user_id=:user_id and game_id=:game_id", nativeQuery = true)
     Optional<GameRating> getUserRating(@Param("user_id") Long user_id,@Param("game_id") Long game_id);
 
 }
