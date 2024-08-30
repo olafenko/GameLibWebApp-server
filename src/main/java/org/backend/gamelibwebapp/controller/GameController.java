@@ -32,6 +32,11 @@ public class GameController {
         return ResponseEntity.ok(gameService.showAcceptedGames());
     }
 
+    @GetMapping("top-three")
+    public ResponseEntity<List<GameResponseObj>> showTopThreeGames(){
+        return ResponseEntity.ok(gameService.topThreeGames());
+    }
+
     @PutMapping("update/{id}")
     public ResponseEntity<GameResponseObj> updateById(@PathVariable("id") Long id,@RequestBody UpdateRequest request){
         log.info("Updating game with id {}",id);

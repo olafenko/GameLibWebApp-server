@@ -11,6 +11,7 @@ import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -93,6 +94,18 @@ public class GameService {
         gameRepository.save(gameById);
 
         return gameById;
+    }
+
+    public List<GameResponseObj> topThreeGames() {
+
+        List<Game> acceptedGames = gameRepository.getAccepted();
+        List<GameResponseObj> allGames = mapAllGamesToResponse(acceptedGames);
+
+        return allGames.stream()
+                .sorted(Comparator.comparing(GameResponseObj::rating))
+                .limit(3)
+                .toList();
+
     }
 
     private GameResponseObj mapToGameResponse(Game game) {
