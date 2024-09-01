@@ -3,7 +3,7 @@ package org.backend.gamelibwebapp.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.backend.gamelibwebapp.dto.GameAddRequest;
-import org.backend.gamelibwebapp.dto.GameResponseObj;
+import org.backend.gamelibwebapp.dto.GameDTO;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.services.GameService;
@@ -28,17 +28,17 @@ public class GameController {
     }
 
     @GetMapping("all")
-    public ResponseEntity<List<GameResponseObj>> showAllGames(){
+    public ResponseEntity<List<GameDTO>> showAllGames(){
         return ResponseEntity.ok(gameService.showAcceptedGames());
     }
 
     @GetMapping("top-three")
-    public ResponseEntity<List<GameResponseObj>> showTopThreeGames(){
+    public ResponseEntity<List<GameDTO>> showTopThreeGames(){
         return ResponseEntity.ok(gameService.topThreeGames());
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<GameResponseObj> updateById(@PathVariable("id") Long id,@RequestBody UpdateRequest request){
+    public ResponseEntity<GameDTO> updateById(@PathVariable("id") Long id, @RequestBody UpdateRequest request){
         log.info("Updating game with id {}",id);
         return ResponseEntity.ok(gameService.updateById(id,request));
     }
@@ -50,7 +50,7 @@ public class GameController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GameResponseObj> getById(@PathVariable("id") Long id){
+    public ResponseEntity<GameDTO> getById(@PathVariable("id") Long id){
         log.info("Getting game with id {}",id);
         return ResponseEntity.ok(gameService.getGame(id));
     }

@@ -24,13 +24,13 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
-    public AuthResponse register(RegistrationRequest request){
+    public AuthResponse register(RegistrationRequest request) {
 
-        if (appUserRepository.existsByEmail(request.email())){
+        if (appUserRepository.existsByEmail(request.email())) {
             throw new ResourceAlreadyExistsException("Email is already taken!");
         }
 
-        if (appUserRepository.existsByUsername(request.username())){
+        if (appUserRepository.existsByUsername(request.username())) {
             throw new ResourceAlreadyExistsException("Username is already taken!");
         }
 
@@ -45,10 +45,10 @@ public class AuthService {
 
         String jwt = jwtService.generateToken(user);
 
-        return  new AuthResponse(jwt);
+        return new AuthResponse(jwt);
     }
 
-    public AuthResponse login(LoginRequest loginRequest){
+    public AuthResponse login(LoginRequest loginRequest) {
 
         authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
@@ -59,7 +59,6 @@ public class AuthService {
         return new AuthResponse(jwt);
 
     }
-
 
 
 }

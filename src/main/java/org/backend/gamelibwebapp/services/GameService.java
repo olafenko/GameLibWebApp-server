@@ -2,7 +2,7 @@ package org.backend.gamelibwebapp.services;
 
 import lombok.RequiredArgsConstructor;
 import org.backend.gamelibwebapp.dto.GameAddRequest;
-import org.backend.gamelibwebapp.dto.GameResponseObj;
+import org.backend.gamelibwebapp.dto.GameDTO;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.exception.CannotPerformActionException;
@@ -23,7 +23,7 @@ public class GameService {
     private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
-    public List<GameResponseObj> showAcceptedGames() {
+    public List<GameDTO> showAcceptedGames() {
         List<Game> accepted = gameRepository.getAccepted();
         return mapAllGamesToResponse(accepted);
     }
@@ -52,7 +52,7 @@ public class GameService {
     }
 
 
-    public GameResponseObj updateById(Long id, UpdateRequest updatedGame) {
+    public GameDTO updateById(Long id, UpdateRequest updatedGame) {
 
         Game gameToUpdate = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
@@ -77,7 +77,7 @@ public class GameService {
     }
 
 
-    public GameResponseObj getGame(Long id) {
+    public GameDTO getGame(Long id) {
 
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
@@ -96,21 +96,21 @@ public class GameService {
         return gameById;
     }
 
-    public List<GameResponseObj> topThreeGames() {
+    public List<GameDTO> topThreeGames() {
 
         List<Game> acceptedGames = gameRepository.getAccepted();
-        List<GameResponseObj> allGames = mapAllGamesToResponse(acceptedGames);
+        List<GameDTO> allGames = mapAllGamesToResponse(acceptedGames);
 
         return allGames.stream()
-                .sorted(Comparator.comparing(GameResponseObj::rating))
+                .sorted(Comparator.comparing(GameDTO::rating))
                 .limit(3)
                 .toList();
 
     }
 
-    private GameResponseObj mapToGameResponse(Game game) {
+    private GameDTO mapToGameResponse(Game game) {
 
-        return GameResponseObj.builder()
+        return GameDTO.builder()
                 .title(game.getTitle())
                 .producer(game.getProducer())
                 .categories(game.getGameCategory())
@@ -120,7 +120,7 @@ public class GameService {
 
     }
 
-    private List<GameResponseObj> mapAllGamesToResponse(List<Game> games) {
+    private List<GameDTO> mapAllGamesToResponse(List<Game> games) {
 
         return games.stream()
                 .map(this::mapToGameResponse)

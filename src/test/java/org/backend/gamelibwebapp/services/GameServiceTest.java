@@ -1,7 +1,7 @@
 package org.backend.gamelibwebapp.services;
 
 import org.backend.gamelibwebapp.dto.GameAddRequest;
-import org.backend.gamelibwebapp.dto.GameResponseObj;
+import org.backend.gamelibwebapp.dto.GameDTO;
 import org.backend.gamelibwebapp.dto.UpdateRequest;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.exception.CannotPerformActionException;
@@ -15,7 +15,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -30,9 +29,9 @@ class GameServiceTest {
 
     @Mock
     private GameRatingService gameRatingService;
-
     @Mock
     private GameRepository gameRepository;
+
     private final Long sampleId = 1L;
 
 
@@ -201,7 +200,7 @@ class GameServiceTest {
         given(gameRepository.findById(game.getId())).willReturn(Optional.of(game));
 
         //when
-        GameResponseObj response = underTestService.getGame(game.getId());
+        GameDTO response = underTestService.getGame(game.getId());
 
         //then
         assertThat(response).isNotNull();
@@ -271,6 +270,7 @@ class GameServiceTest {
         assertThat(capturedGame.isAccepted()).isTrue();
 
     }
+
     @Test
     void should_not_accept_game_and_throw_exception_because_it_not_exist() {
 

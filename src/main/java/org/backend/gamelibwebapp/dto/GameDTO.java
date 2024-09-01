@@ -6,5 +6,5 @@ import org.backend.gamelibwebapp.entities.enums.GameCategory;
 import java.util.List;
 
 @Builder
-public record GameResponseObj(String title, String producer, List<GameCategory> categories,String imageUrl,Double rating) {
+public record GameDTO(String title, String producer, List<GameCategory> categories, String imageUrl, Double rating) {
 }
