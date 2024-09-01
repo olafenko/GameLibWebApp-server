@@ -52,7 +52,7 @@ public class GameService {
     }
 
 
-    public GameDTO updateById(Long id, UpdateRequest updatedGame) {
+    public GameDTO updateGameById(Long id, UpdateRequest updatedGame) {
 
         Game gameToUpdate = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
@@ -67,7 +67,7 @@ public class GameService {
     }
 
     //ADMIN USAGE
-    public String deleteById(Long id) {
+    public String deleteGameById(Long id) {
 
         Game gameToDelete = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
 
@@ -96,7 +96,7 @@ public class GameService {
         return gameById;
     }
 
-    public List<GameDTO> topThreeGames() {
+    public List<GameDTO> getTopThreeGames() {
 
         List<Game> acceptedGames = gameRepository.getAccepted();
         List<GameDTO> allGames = mapAllGamesToResponse(acceptedGames);

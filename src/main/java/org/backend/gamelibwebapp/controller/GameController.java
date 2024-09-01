@@ -34,19 +34,19 @@ public class GameController {
 
     @GetMapping("top-three")
     public ResponseEntity<List<GameDTO>> showTopThreeGames(){
-        return ResponseEntity.ok(gameService.topThreeGames());
+        return ResponseEntity.ok(gameService.getTopThreeGames());
     }
 
     @PutMapping("update/{id}")
     public ResponseEntity<GameDTO> updateById(@PathVariable("id") Long id, @RequestBody UpdateRequest request){
         log.info("Updating game with id {}",id);
-        return ResponseEntity.ok(gameService.updateById(id,request));
+        return ResponseEntity.ok(gameService.updateGameById(id,request));
     }
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> deleteById (@PathVariable("id") Long id){
         log.info("Deleting game with id {}",id);
-        return ResponseEntity.ok(gameService.deleteById(id));
+        return ResponseEntity.ok(gameService.deleteGameById(id));
     }
 
     @GetMapping("{id}")

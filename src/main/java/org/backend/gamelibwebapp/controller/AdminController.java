@@ -30,7 +30,7 @@ public class AdminController {
     @DeleteMapping("reject/{id}")
     public ResponseEntity<String> rejectGame (@PathVariable("id") Long id){
         log.info("Rejecting game with id {}",id);
-        return ResponseEntity.ok(gameService.deleteById(id));
+        return ResponseEntity.ok(gameService.deleteGameById(id));
     }
 
 }

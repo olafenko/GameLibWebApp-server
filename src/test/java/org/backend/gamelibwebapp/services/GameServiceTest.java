@@ -116,7 +116,7 @@ class GameServiceTest {
         given(gameRepository.findById(game.getId())).willReturn(Optional.of(game));
 
         //when
-        underTestService.updateById(game.getId(), updateRequest);
+        underTestService.updateGameById(game.getId(), updateRequest);
 
         //then
         ArgumentCaptor<Game> gameArgumentCaptor = ArgumentCaptor.forClass(Game.class);
@@ -139,7 +139,7 @@ class GameServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> underTestService.updateById(sampleId, updateRequest))
+        assertThatThrownBy(() -> underTestService.updateGameById(sampleId, updateRequest))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining(String.format("Game with id %s not found", sampleId));
     }
@@ -158,7 +158,7 @@ class GameServiceTest {
         given(gameRepository.findById(gameToDelete.getId())).willReturn(Optional.of(gameToDelete));
 
         //when
-        String resultMessage = underTestService.deleteById(gameToDelete.getId());
+        String resultMessage = underTestService.deleteGameById(gameToDelete.getId());
 
         //then
         verify(gameRepository).deleteById(gameToDelete.getId());
@@ -176,7 +176,7 @@ class GameServiceTest {
 
         //when
         //then
-        assertThatThrownBy(() -> underTestService.deleteById(sampleId))
+        assertThatThrownBy(() -> underTestService.deleteGameById(sampleId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining(String.format("Game with id %s not found", sampleId));
 
