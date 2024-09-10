@@ -45,16 +45,15 @@ public class GameRatingService {
                 .user(userById)
                 .build();
 
-        gameById.getRatings().add(rating);
-
         ratingRepository.save(rating);
 
         return rating;
 
     }
 
-    public double getAverageRating(Game game){
-        double average = game.getRatings().stream()
+    //DO DODANIA METODA W GAME RATING REPOSITORY ZAMIAST WYWOLYWANIA METODY GET RATING NA GRZE (TA METODA DO USUNIECIA)
+    public double getAverageRating(Long id){
+        double average = ratingRepository.getRatingsByGameId(id).stream()
                 .mapToDouble(GameRating::getRate)
                 .average()
                 .orElse(0d);

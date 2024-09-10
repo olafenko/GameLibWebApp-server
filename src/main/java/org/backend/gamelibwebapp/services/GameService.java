@@ -115,7 +115,7 @@ public class GameService {
                 .producer(game.getProducer())
                 .categories(game.getGameCategory())
                 .imageUrl(game.getImageUrl())
-                .rating(ratingService.getAverageRating(game))
+                .rating(ratingService.getAverageRating(game.getId()))
                 .build();
 
     }

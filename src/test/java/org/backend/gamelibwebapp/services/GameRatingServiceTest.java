@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 
@@ -50,7 +51,7 @@ class GameRatingServiceTest {
     @Test
     void should_add_new_game_rating() {
         //given
-        Game game = Game.builder().id(sampleId).title("Gothic").isAccepted(true).ratings(new ArrayList<>()).build();
+        Game game = Game.builder().id(sampleId).title("Gothic").isAccepted(true).build();
         AppUser user = AppUser.builder().id(sampleId).username("user").email("email").password("user").build();
 
         RatingRequest testRatingRequest = new RatingRequest(4, sampleId, sampleId);
@@ -65,7 +66,6 @@ class GameRatingServiceTest {
         assertThat(gameRatingResult.getRate()).isEqualTo(testRatingRequest.value());
         assertThat(gameRatingResult.getGame()).isEqualTo(game);
         assertThat(gameRatingResult.getUser()).isEqualTo(user);
-        assertThat(game.getRatings().contains(gameRatingResult)).isTrue();
         verify(gameRatingRepository).save(gameRatingResult);
 
     }
@@ -73,7 +73,7 @@ class GameRatingServiceTest {
     @Test
     void should_update_existing_game_rating() {
         //given
-        Game game = Game.builder().id(sampleId).title("Gothic").isAccepted(true).ratings(new ArrayList<>()).build();
+        Game game = Game.builder().id(sampleId).title("Gothic").isAccepted(true).build();
         AppUser user = AppUser.builder().id(sampleId).username("user").email("email").password("user").build();
         GameRating existingGameRating = GameRating.builder().rate(2).game(game).user(user).build();
 
@@ -140,13 +140,17 @@ class GameRatingServiceTest {
         GameRating rating1 = new GameRating();
         GameRating rating2 = new GameRating();
 
+        Game game = new Game();
+
         rating1.setRate(3);
         rating2.setRate(5);
 
-        Game game = new Game();
-        game.setRatings(List.of(rating1, rating2));
+        game.setId(sampleId);
+
+        given(gameRatingRepository.getRatingsByGameId(game.getId())).willReturn(List.of(rating1, rating2));
+
         //when
-        double result = underTestService.getAverageRating(game);
+        double result = underTestService.getAverageRating(game.getId());
 
         //then
         assertThat(result).isEqualTo(4);
@@ -157,9 +161,9 @@ class GameRatingServiceTest {
 
         //given
         Game game = new Game();
-        game.setRatings(List.of());
+        given(gameRatingRepository.getRatingsByGameId(game.getId())).willReturn(List.of());
         //when
-        double result = underTestService.getAverageRating(game);
+        double result = underTestService.getAverageRating(game.getId());
 
         //then
         assertThat(result).isEqualTo(0);
@@ -176,9 +180,9 @@ class GameRatingServiceTest {
         rating2.setRate(4.4);
 
         Game game = new Game();
-        game.setRatings(List.of(rating1, rating2));
+        given(gameRatingRepository.getRatingsByGameId(game.getId())).willReturn(List.of(rating1, rating2));
         //when
-        double result = underTestService.getAverageRating(game);
+        double result = underTestService.getAverageRating(game.getId());
 
         //then
         assertThat(result).isEqualTo(3.3);

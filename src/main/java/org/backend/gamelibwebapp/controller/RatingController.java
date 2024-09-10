@@ -20,9 +20,9 @@ public class RatingController {
     private final GameRatingService gameRatingService;
 
     @PostMapping("rate")
-    public ResponseEntity<GameRating> rate(@RequestBody RatingRequest request){
+    public ResponseEntity<Double> rate(@RequestBody RatingRequest request){
         log.info("Rating game with id {}, by user with id {}",request.gameId(),request.userId());
-        return ResponseEntity.ok(gameRatingService.rateGame(request));
+        return ResponseEntity.ok(gameRatingService.rateGame(request).getRate());
     }
 
 

@@ -196,7 +196,7 @@ class GameServiceTest {
                 .isAccepted(true)
                 .build();
 
-        given(gameRatingService.getAverageRating(game)).willReturn(2.5);
+        given(gameRatingService.getAverageRating(game.getId())).willReturn(2.5);
         given(gameRepository.findById(game.getId())).willReturn(Optional.of(game));
 
         //when

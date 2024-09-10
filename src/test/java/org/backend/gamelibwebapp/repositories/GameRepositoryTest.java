@@ -28,7 +28,7 @@ class GameRepositoryTest {
 
         //given
         String title = "Gothic";
-        Game game = new Game(null,"Gothic",null,null,null,null,true);
+        Game game = new Game(null,"Gothic",null,null,null,true);
         underTestGameRepository.save(game);
         //when
         boolean result = underTestGameRepository.existsByTitle(title);
@@ -95,10 +95,10 @@ class GameRepositoryTest {
     private List<Game> gamesToTest(){
 
         return List.of(
-                new Game(null,"Gothic","",null,null,null,true),
-                new Game(null,"Risen","",null,null,null,false),
-                new Game(null,"Assassin","",null,null,null,true),
-                new Game(null,"God of war","",null,null,null,false)
+                new Game(null,"Gothic","",null,null,true),
+                new Game(null,"Risen","",null,null,false),
+                new Game(null,"Assassin","",null,null,true),
+                new Game(null,"God of war","",null,null,false)
         );
     }
 }

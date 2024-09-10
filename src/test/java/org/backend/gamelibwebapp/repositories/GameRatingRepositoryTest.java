@@ -43,7 +43,7 @@ class GameRatingRepositoryTest {
         AppUser testUser = new AppUser(1L,null, null, null, null);
         appUserRepository.save(testUser);
 
-        Game testGame = new Game(1L,null, null, null, null, null, false);
+        Game testGame = new Game(1L,null, null, null, null, false);
         gameRepository.save(testGame);
 
         GameRating testRating = new GameRating(null, 0, testUser, testGame);

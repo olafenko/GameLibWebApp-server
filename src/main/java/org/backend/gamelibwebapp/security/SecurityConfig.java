@@ -4,6 +4,7 @@ package org.backend.gamelibwebapp.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +27,8 @@ public class SecurityConfig {
             http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
-                    .requestMatchers("/api/auth/**","/api/games/all").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/games/**").permitAll()
                     .requestMatchers("/api/games/**","/api/ratings/**").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated())
