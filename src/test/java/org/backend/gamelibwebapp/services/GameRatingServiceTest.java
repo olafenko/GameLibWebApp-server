@@ -54,7 +54,7 @@ class GameRatingServiceTest {
         Game game = Game.builder().id(sampleId).title("Gothic").isAccepted(true).build();
         AppUser user = AppUser.builder().id(sampleId).username("user").email("email").password("user").build();
 
-        RatingRequest testRatingRequest = new RatingRequest(4, sampleId, sampleId);
+        RatingRequest testRatingRequest = new RatingRequest(4.0, sampleId, sampleId);
 
         given(appUserRepository.findById(sampleId)).willReturn(Optional.of(user));
         given(gameRepository.findById(sampleId)).willReturn(Optional.of(game));
@@ -77,7 +77,7 @@ class GameRatingServiceTest {
         AppUser user = AppUser.builder().id(sampleId).username("user").email("email").password("user").build();
         GameRating existingGameRating = GameRating.builder().rate(2).game(game).user(user).build();
 
-        RatingRequest testRatingRequest = new RatingRequest(4, sampleId, sampleId);
+        RatingRequest testRatingRequest = new RatingRequest(4.0, sampleId, sampleId);
 
         given(appUserRepository.findById(sampleId)).willReturn(Optional.of(user));
         given(gameRepository.findById(sampleId)).willReturn(Optional.of(game));
@@ -95,7 +95,7 @@ class GameRatingServiceTest {
     @Test
     void should_not_add_game_rating_and_throw_exception_because_user_does_not_exist() {
         //given
-        RatingRequest testRatingRequest = new RatingRequest(4, sampleId, sampleId);
+        RatingRequest testRatingRequest = new RatingRequest(4.0, sampleId, sampleId);
         given(appUserRepository.findById(sampleId)).willReturn(Optional.empty());
 
         //when
@@ -107,7 +107,7 @@ class GameRatingServiceTest {
     @Test
     void should_not_add_game_rating_and_throw_exception_because_game_does_not_exist() {
         //given
-        RatingRequest testRatingRequest = new RatingRequest(4, sampleId, sampleId);
+        RatingRequest testRatingRequest = new RatingRequest(4.0, sampleId, sampleId);
         given(appUserRepository.findById(sampleId)).willReturn(Optional.of(new AppUser()));
         given(gameRepository.findById(sampleId)).willReturn(Optional.empty());
 
@@ -120,7 +120,7 @@ class GameRatingServiceTest {
     @Test
     void should_not_add_game_rating_and_throw_exception_because_game_is_not_accepted() {
         //given
-        RatingRequest testRatingRequest = new RatingRequest(4, sampleId, sampleId);
+        RatingRequest testRatingRequest = new RatingRequest(4.0, sampleId, sampleId);
         Game game = Game.builder().id(sampleId).title("Gothic").isAccepted(false).build();
 
         given(appUserRepository.findById(sampleId)).willReturn(Optional.of(new AppUser()));

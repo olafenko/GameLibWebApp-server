@@ -15,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -67,7 +68,7 @@ class GameServiceTest {
     void should_add_game() {
 
         //given
-        GameAddRequest gameAddRequest = new GameAddRequest("Gothic", null, null, null);
+        GameAddRequest gameAddRequest = new GameAddRequest("Gothic", "", List.of(), "null");
 
         //when
         underTestService.addGame(gameAddRequest);
@@ -88,7 +89,7 @@ class GameServiceTest {
     void should_not_add_game_and_throw_exception_because_it_already_exists() {
 
         //given
-        GameAddRequest gameAddRequest = new GameAddRequest("Gothic", null, null, null);
+        GameAddRequest gameAddRequest = new GameAddRequest("Gothic", "", List.of(), "null");
         given(gameRepository.existsByTitle(gameAddRequest.title())).willReturn(true);
 
         //when
@@ -112,7 +113,7 @@ class GameServiceTest {
                 .producer(null)
                 .isAccepted(false)
                 .build();
-        UpdateRequest updateRequest = new UpdateRequest("Gothic 2", "Piranha Bytes", null, "image url");
+        UpdateRequest updateRequest = new UpdateRequest("Gothic 2", "Piranha Bytes", List.of(), "image url");
         given(gameRepository.findById(game.getId())).willReturn(Optional.of(game));
 
         //when
@@ -134,7 +135,7 @@ class GameServiceTest {
 
         //given
 
-        UpdateRequest updateRequest = new UpdateRequest("Gothic 2", "Piranha Bytes", null, "image url");
+        UpdateRequest updateRequest = new UpdateRequest("Gothic 2", "Piranha Bytes", List.of(), "image url");
         given(gameRepository.findById(sampleId)).willReturn(Optional.empty());
 
         //when
@@ -190,9 +191,9 @@ class GameServiceTest {
         //given
         Game game = Game.builder()
                 .title("Gothic")
-                .gameCategory(null)
-                .imageUrl(null)
-                .producer(null)
+                .gameCategory(List.of())
+                .imageUrl("")
+                .producer("")
                 .isAccepted(true)
                 .build();
 
@@ -232,9 +233,9 @@ class GameServiceTest {
         //given
         Game game = Game.builder()
                 .title("Gothic")
-                .gameCategory(null)
-                .imageUrl(null)
-                .producer(null)
+                .gameCategory(List.of())
+                .imageUrl("")
+                .producer("")
                 .isAccepted(false)
                 .build();
         given(gameRepository.findById(any())).willReturn(Optional.of(game));
@@ -254,9 +255,9 @@ class GameServiceTest {
         //given
         Game gameToAccept = Game.builder()
                 .title("Gothic")
-                .gameCategory(null)
-                .imageUrl(null)
-                .producer(null)
+                .gameCategory(List.of())
+                .imageUrl("")
+                .producer("")
                 .isAccepted(false)
                 .build();
         given(gameRepository.findById(gameToAccept.getId())).willReturn(Optional.of(gameToAccept));
