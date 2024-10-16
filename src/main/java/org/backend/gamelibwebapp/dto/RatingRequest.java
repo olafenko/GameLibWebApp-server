@@ -1,4 +1,6 @@
 package org.backend.gamelibwebapp.dto;
 
-public record RatingRequest(double value,Long gameId, Long userId) {
+import lombok.NonNull;
+
+public record RatingRequest(@NonNull Double value, @NonNull Long gameId,@NonNull Long userId) {
 }
