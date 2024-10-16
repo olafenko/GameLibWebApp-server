@@ -51,7 +51,6 @@ public class GameRatingService {
 
     }
 
-    //DO DODANIA METODA W GAME RATING REPOSITORY ZAMIAST WYWOLYWANIA METODY GET RATING NA GRZE (TA METODA DO USUNIECIA)
     public Double getAverageRating(Long id){
         double average = ratingRepository.getRatingsByGameId(id).stream()
                 .mapToDouble(GameRating::getRate)
