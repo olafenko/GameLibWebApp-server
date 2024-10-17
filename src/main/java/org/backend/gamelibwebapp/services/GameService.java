@@ -25,14 +25,16 @@ public class GameService {
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
     public List<GameDTO> showAcceptedGames() {
-        List<Game> accepted = gameRepository.getAccepted();
-        return accepted.stream()
+        return gameRepository.findAll().stream()
+                .filter(Game::isAccepted)
                 .map(mapper)
                 .toList();
     }
 
     public List<Game> showGamesToAccept() {
-        return gameRepository.getNotAccepted();
+        return gameRepository.findAll().stream()
+                .filter(game -> !game.isAccepted())
+                .toList();
     }
 
     public Game addGame(GameAddRequest gameAddRequest) {
@@ -101,9 +103,8 @@ public class GameService {
 
     public List<GameDTO> getTopThreeGames() {
 
-        List<Game> acceptedGames = gameRepository.getAccepted();
-
-        return acceptedGames.stream()
+        return gameRepository.findAll().stream()
+                .filter(Game::isAccepted)
                 .map(mapper)
                 .sorted(Comparator.comparing(GameDTO::rating))
                 .limit(3)
