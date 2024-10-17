@@ -106,10 +106,9 @@ public class GameService {
         return gameRepository.findAll().stream()
                 .filter(Game::isAccepted)
                 .map(mapper)
-                .sorted(Comparator.comparing(GameDTO::rating))
+                .sorted(Comparator.comparing(GameDTO::rating).reversed())
                 .limit(3)
                 .toList();
-
     }
 
 }

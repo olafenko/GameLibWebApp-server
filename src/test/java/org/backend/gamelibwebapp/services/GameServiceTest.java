@@ -26,43 +26,64 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
-
-    private GameService underTestService;
-
-    @Mock
-    private GameDTOMapper mapper;
     @Mock
     private GameRepository gameRepository;
+    @Mock
+    private GameRatingService gameRatingService;
 
+    private GameService underTestService;
+    private GameDTOMapper mapper;
     private final Long sampleId = 1L;
-
 
     @BeforeEach
     void setUp() {
-        underTestService = new GameService(gameRepository,mapper);
+        mapper = new GameDTOMapper(gameRatingService);
+        underTestService = new GameService(gameRepository, mapper);
     }
-
 
     @Test
     void should_get_accepted_games() {
 
         //given
-        //when
-        underTestService.getAcceptedGames();
+        Game acceptedGame = mock(Game.class);
+        Game notAcceptedGame = mock(Game.class);
 
+        when(acceptedGame.isAccepted()).thenReturn(true);
+        when(acceptedGame.getId()).thenReturn(1L);
+
+        when(notAcceptedGame.isAccepted()).thenReturn(false);
+
+        when(gameRepository.findAll()).thenReturn(List.of(acceptedGame, notAcceptedGame));
+
+        when(gameRatingService.getAverageRating(1L)).thenReturn(4.5);
+
+        //when
+        List<GameDTO> result = underTestService.getAcceptedGames();
         //then
-        verify(gameRepository).getAccepted();
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).rating()).isEqualTo(4.5);
+
+        verify(gameRatingService).getAverageRating(1L);
+
     }
 
     @Test
     void should_get_not_accepted_games() {
 
         //given
-        //when
-        underTestService.getGamesToAccept();
+        Game acceptedGame = mock(Game.class);
+        Game notAcceptedGame = mock(Game.class);
 
+        when(acceptedGame.isAccepted()).thenReturn(true);
+        when(notAcceptedGame.isAccepted()).thenReturn(false);
+
+        when(gameRepository.findAll()).thenReturn(List.of(acceptedGame, notAcceptedGame));
+
+        //when
+        List<Game> result = underTestService.getGamesToAccept();
         //then
-        verify(gameRepository).getNotAccepted();
+        assertThat(result.size()).isEqualTo(1);
+
     }
 
     @Test
@@ -109,10 +130,10 @@ class GameServiceTest {
         //given
         Game game = Game.builder()
                 .title("Gothic")
-                .gameCategory(null)
-                .imageUrl(null)
-                .producer(null)
-                .isAccepted(false)
+                .gameCategory(List.of())
+                .imageUrl("")
+                .producer("")
+                .isAccepted(true)
                 .build();
         UpdateRequest updateRequest = new UpdateRequest("Gothic 2", "Piranha Bytes", List.of(), "image url");
         given(gameRepository.findById(game.getId())).willReturn(Optional.of(game));
@@ -152,10 +173,10 @@ class GameServiceTest {
         //given
         Game gameToDelete = Game.builder()
                 .title("Gothic")
-                .gameCategory(null)
-                .imageUrl(null)
-                .producer(null)
-                .isAccepted(false)
+                .gameCategory(List.of())
+                .imageUrl("")
+                .producer("")
+                .isAccepted(true)
                 .build();
         given(gameRepository.findById(gameToDelete.getId())).willReturn(Optional.of(gameToDelete));
 
@@ -198,19 +219,15 @@ class GameServiceTest {
                 .isAccepted(true)
                 .build();
 
-        given(gameRatingService.getAverageRating(game.getId())).willReturn(2.5);
         given(gameRepository.findById(game.getId())).willReturn(Optional.of(game));
+
+        GameDTO expected = mapper.apply(game);
 
         //when
         GameDTO response = underTestService.getGame(game.getId());
 
         //then
-        assertThat(response).isNotNull();
-        assertThat(response.title()).isEqualTo(game.getTitle());
-        assertThat(response.producer()).isEqualTo(game.getProducer());
-        assertThat(response.categories()).isEqualTo(game.getGameCategory());
-        assertThat(response.imageUrl()).isEqualTo(game.getImageUrl());
-        assertThat(response.rating()).isEqualTo(2.5);
+        assertThat(response).isEqualTo(expected);
 
     }
 
@@ -270,6 +287,7 @@ class GameServiceTest {
 
         Game capturedGame = gameArgumentCaptor.getValue();
         assertThat(capturedGame.isAccepted()).isTrue();
+        assertThat(capturedGame).isEqualTo(gameToAccept);
 
     }
 
@@ -286,4 +304,44 @@ class GameServiceTest {
                 .hasMessageContaining(String.format("Game with id %s not found", sampleId));
 
     }
+
+    @Test
+    void should_get_top_three_games_by_average_rating(){
+
+        //given
+        Game game1 = mock(Game.class);
+        Game game2 = mock(Game.class);
+        Game game3 = mock(Game.class);
+        Game game4 = mock(Game.class);
+
+        when(game1.getId()).thenReturn(1L);
+        when(game1.isAccepted()).thenReturn(true);
+        when(game2.getId()).thenReturn(2L);
+        when(game2.isAccepted()).thenReturn(true);
+        when(game3.getId()).thenReturn(3L);
+        when(game3.isAccepted()).thenReturn(true);
+        when(game4.getId()).thenReturn(4L);
+        when(game4.isAccepted()).thenReturn(true);
+
+        when(gameRatingService.getAverageRating(1L)).thenReturn(4.5);
+        when(gameRatingService.getAverageRating(2L)).thenReturn(1.5);
+        when(gameRatingService.getAverageRating(3L)).thenReturn(5.0);
+        when(gameRatingService.getAverageRating(4L)).thenReturn(3.5);
+
+        when(gameRepository.findAll()).thenReturn(List.of(game1, game2, game3, game4));
+
+        //when
+
+        List<GameDTO> result = underTestService.getTopThreeGames();
+
+        //then
+
+        assertThat(result.size()).isEqualTo(3);
+        assertThat(result.get(0).rating()).isEqualTo(5.0);
+        assertThat(result.get(1).rating()).isEqualTo(4.5);
+        assertThat(result.get(2).rating()).isEqualTo(3.5);
+
+    }
+
+
 }
