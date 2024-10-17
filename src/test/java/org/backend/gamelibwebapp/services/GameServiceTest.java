@@ -7,6 +7,7 @@ import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.exception.CannotPerformActionException;
 import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
 import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
+import org.backend.gamelibwebapp.mappers.GameDTOMapper;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class GameServiceTest {
     private GameService underTestService;
 
     @Mock
-    private GameRatingService gameRatingService;
+    private GameDTOMapper mapper;
     @Mock
     private GameRepository gameRepository;
 
@@ -38,7 +39,7 @@ class GameServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTestService = new GameService(gameRepository, gameRatingService);
+        underTestService = new GameService(gameRepository,mapper);
     }
 
 

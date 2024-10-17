@@ -9,6 +9,4 @@ public interface GameRepository extends JpaRepository<Game,Long> {
 
     boolean existsByTitle(String title);
 
-
-
 }
