@@ -8,6 +8,7 @@ import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.exception.CannotPerformActionException;
 import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
 import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
+import org.backend.gamelibwebapp.mappers.GameDTOMapper;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,15 @@ import java.util.List;
 public class GameService {
 
     private final GameRepository gameRepository;
-    private final GameRatingService ratingService;
+    private final GameDTOMapper mapper;
     private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
     public List<GameDTO> showAcceptedGames() {
         List<Game> accepted = gameRepository.getAccepted();
-        return mapAllGamesToResponse(accepted);
+        return accepted.stream()
+                .map(mapper)
+                .toList();
     }
 
     public List<Game> showGamesToAccept() {
@@ -63,7 +66,7 @@ public class GameService {
 
         gameRepository.save(gameToUpdate);
 
-        return mapToGameResponse(gameToUpdate);
+        return mapper.apply(gameToUpdate);
     }
 
     //ADMIN USAGE
@@ -85,7 +88,7 @@ public class GameService {
             throw new CannotPerformActionException("Cannot get not accepted game");
         }
 
-        return mapToGameResponse(game);
+        return mapper.apply(game);
     }
 
     public Game acceptGame(Long id) {
@@ -99,31 +102,13 @@ public class GameService {
     public List<GameDTO> getTopThreeGames() {
 
         List<Game> acceptedGames = gameRepository.getAccepted();
-        List<GameDTO> allGames = mapAllGamesToResponse(acceptedGames);
 
-        return allGames.stream()
+        return acceptedGames.stream()
+                .map(mapper)
                 .sorted(Comparator.comparing(GameDTO::rating))
                 .limit(3)
                 .toList();
 
     }
 
-    private GameDTO mapToGameResponse(Game game) {
-
-        return GameDTO.builder()
-                .title(game.getTitle())
-                .producer(game.getProducer())
-                .categories(game.getGameCategory())
-                .imageUrl(game.getImageUrl())
-                .rating(ratingService.getAverageRating(game.getId()))
-                .build();
-
-    }
-
-    private List<GameDTO> mapAllGamesToResponse(List<Game> games) {
-
-        return games.stream()
-                .map(this::mapToGameResponse)
-                .toList();
-    }
 }
