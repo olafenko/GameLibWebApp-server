@@ -23,16 +23,18 @@ public class GameService {
     private final GameDTOMapper mapper;
     private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
-    //SHOW ALL ACCEPTED GAMES FOR USER USAGE
-    public List<GameDTO> showAcceptedGames() {
-        List<Game> accepted = gameRepository.getAccepted();
-        return accepted.stream()
+    public List<GameDTO> getAcceptedGames() {
+        return gameRepository.findAll().stream()
+                .filter(Game::isAccepted)
                 .map(mapper)
                 .toList();
     }
 
-    public List<Game> showGamesToAccept() {
-        return gameRepository.getNotAccepted();
+    //ONLY FOR ADMIN USAGE
+    public List<Game> getGamesToAccept() {
+        return gameRepository.findAll().stream()
+                .filter(game -> !game.isAccepted())
+                .toList();
     }
 
     public Game addGame(GameAddRequest gameAddRequest) {
@@ -101,14 +103,12 @@ public class GameService {
 
     public List<GameDTO> getTopThreeGames() {
 
-        List<Game> acceptedGames = gameRepository.getAccepted();
-
-        return acceptedGames.stream()
+        return gameRepository.findAll().stream()
+                .filter(Game::isAccepted)
                 .map(mapper)
-                .sorted(Comparator.comparing(GameDTO::rating))
+                .sorted(Comparator.comparing(GameDTO::rating).reversed())
                 .limit(3)
                 .toList();
-
     }
 
 }
