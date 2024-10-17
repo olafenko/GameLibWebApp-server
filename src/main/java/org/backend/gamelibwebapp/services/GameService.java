@@ -24,14 +24,14 @@ public class GameService {
     private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
     //SHOW ALL ACCEPTED GAMES FOR USER USAGE
-    public List<GameDTO> showAcceptedGames() {
+    public List<GameDTO> getAcceptedGames() {
         return gameRepository.findAll().stream()
                 .filter(Game::isAccepted)
                 .map(mapper)
                 .toList();
     }
 
-    public List<Game> showGamesToAccept() {
+    public List<Game> getGamesToAccept() {
         return gameRepository.findAll().stream()
                 .filter(game -> !game.isAccepted())
                 .toList();

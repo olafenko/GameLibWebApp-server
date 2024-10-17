@@ -19,7 +19,7 @@ public class AdminController {
 
     @GetMapping("to-accept")
     public ResponseEntity<List<Game>> getGamesToAccept(){
-        return ResponseEntity.ok(gameService.showGamesToAccept());
+        return ResponseEntity.ok(gameService.getGamesToAccept());
     }
 
     @PostMapping("accept/{id}")

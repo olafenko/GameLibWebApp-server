@@ -47,7 +47,7 @@ class GameServiceTest {
 
         //given
         //when
-        underTestService.showAcceptedGames();
+        underTestService.getAcceptedGames();
 
         //then
         verify(gameRepository).getAccepted();
@@ -58,7 +58,7 @@ class GameServiceTest {
 
         //given
         //when
-        underTestService.showGamesToAccept();
+        underTestService.getGamesToAccept();
 
         //then
         verify(gameRepository).getNotAccepted();

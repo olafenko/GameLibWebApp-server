@@ -29,7 +29,7 @@ public class GameController {
 
     @GetMapping("all")
     public ResponseEntity<List<GameDTO>> showAllGames(){
-        return ResponseEntity.ok(gameService.showAcceptedGames());
+        return ResponseEntity.ok(gameService.getAcceptedGames());
     }
 
     @GetMapping("top-three")
