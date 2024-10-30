@@ -1,8 +1,6 @@
 package org.backend.gamelibwebapp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import org.backend.gamelibwebapp.dto.GameDTO;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.hamcrest.Matchers;
@@ -13,13 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -31,23 +26,44 @@ class GameControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private ObjectMapper mapper;
-    @Autowired
     private GameRepository gameRepository;
 
 
     @Test
-    void should_add_game(){
+    void should_get_all_games() throws Exception {
         //given
+        Game testGame1 = new Game();
+        testGame1.setAccepted(true);
+        Game testGame2 = new Game();
+        testGame2.setAccepted(true);
 
+        gameRepository.save(testGame1);
+        gameRepository.save(testGame2);
 
         //when
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/games/add"))
-//                .andDo(MockMvcResultHandlers.print())
-//                .andExpect(MockMvcResultMatchers.status().is(201))
-//                .andExpect(MockMvcResultMatchers.)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/all"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(2)));
 
+        //then
+    }
+    @Test
+    void should_top_three_games() throws Exception {
+        //given
+        Game testGame1 = new Game();
+        testGame1.setAccepted(true);
+        Game testGame2 = new Game();
+        testGame2.setAccepted(true);
 
+        gameRepository.save(testGame1);
+        gameRepository.save(testGame2);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/all"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(2)));
 
         //then
     }
@@ -55,7 +71,6 @@ class GameControllerTest {
 
 
     @Test
-    @Transactional
     void should_get_single_game_by_id() throws Exception {
 
         //given
