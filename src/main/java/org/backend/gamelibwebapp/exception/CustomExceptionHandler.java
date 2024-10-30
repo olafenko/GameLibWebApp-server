@@ -14,7 +14,7 @@ public class CustomExceptionHandler {
         }
         @ExceptionHandler(ResourceNotFoundException.class)
         public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
-                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         @ExceptionHandler(CannotPerformActionException.class)
         public ResponseEntity<String> handleCannotPerformActionException(CannotPerformActionException ex) {

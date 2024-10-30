@@ -1,6 +1,7 @@
 package org.backend.gamelibwebapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.backend.gamelibwebapp.dto.GameDTO;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.repositories.GameRepository;
@@ -54,6 +55,7 @@ class GameControllerTest {
 
 
     @Test
+    @Transactional
     void should_get_single_game_by_id() throws Exception {
 
         //given
@@ -65,9 +67,40 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/" + testGame.getId()))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.title",Matchers.is("Test")));
         //then
 
     }
+
+    @Test
+    void should_not_get_single_game_because_is_not_found() throws Exception {
+
+        //given
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/999"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Game with id 999 not found"));
+        //then
+
+    }
+
+    @Test
+    void should_not_get_single_game_because_is_not_accepted() throws Exception {
+        //given
+        Game testGame = new Game();
+        testGame.setTitle("Test");
+        testGame.setAccepted(false);
+        gameRepository.save(testGame);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/" + testGame.getId()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
+                .andExpect(MockMvcResultMatchers.content().string("Cannot get not accepted game"));
+        //then
+    }
+
 }

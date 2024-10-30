@@ -93,6 +93,7 @@ public class GameService {
         return mapper.apply(game);
     }
 
+    //ADMIN USAGE
     public Game acceptGame(Long id) {
         Game gameById = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
         gameById.setAccepted(true);
