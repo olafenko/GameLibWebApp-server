@@ -55,15 +55,18 @@ class GameControllerTest {
         testGame1.setAccepted(true);
         Game testGame2 = new Game();
         testGame2.setAccepted(true);
+        Game testGame3 = new Game();
+        testGame3.setAccepted(true);
 
         gameRepository.save(testGame1);
         gameRepository.save(testGame2);
+        gameRepository.save(testGame3);
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/all"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(2)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(3)));
 
         //then
     }
