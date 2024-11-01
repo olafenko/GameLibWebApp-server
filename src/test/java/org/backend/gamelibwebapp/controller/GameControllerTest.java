@@ -30,6 +30,7 @@ class GameControllerTest {
     private GameRepository gameRepository;
 
     @Test
+    @Transactional
     void should_add_new_game() throws Exception {
 
         //given
@@ -45,6 +46,7 @@ class GameControllerTest {
 
     }
     @Test
+    @Transactional
     void should_not_add_new_game_cause_it_already_exists() throws Exception {
 
         //given
@@ -63,8 +65,74 @@ class GameControllerTest {
 
     }
 
+    @Test
+    @Transactional
+    void should_update_game() throws Exception {
+        //given
+        Game testGame = new Game();
+        testGame.setTitle("Test game");
+        testGame.setAccepted(true);
+
+        gameRepository.save(testGame);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/games/update/" + testGame.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"imageUrl\":\"test 2\"}"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(Matchers.is("Test game 2")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.producer").value(Matchers.is("Test producer 2")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categories").value(Matchers.contains("MOBA")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.imageUrl").value(Matchers.is("test 2")));
+        //then
+
+    }
 
     @Test
+    void should_not_update_game_because_it_not_exist() throws Exception {
+        //given
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/games/update/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"imageUrl\":\"test 2\"}"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Game with id 999 not found"));
+        //then
+
+    }
+
+
+    @Test
+    @Transactional
+    void should_delete_game() throws Exception {
+        //given
+        Game testGame = new Game();
+        testGame.setTitle("Test game");
+        testGame.setAccepted(true);
+        gameRepository.save(testGame);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/games/delete/" + testGame.getId()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(testGame.getTitle() + " deleted successfully."));
+        //then
+    }
+    @Test
+    void should_not_delete_game_because_it_not_exist() throws Exception {
+        //given
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/games/delete/1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Game with id 1 not found"));
+        //then
+    }
+
+
+    @Test
+    @Transactional
     void should_get_all_games() throws Exception {
         //given
         Game testGame1 = new Game();
@@ -84,6 +152,7 @@ class GameControllerTest {
         //then
     }
     @Test
+    @Transactional
     void should_top_three_games() throws Exception {
         //given
         Game testGame1 = new Game();
@@ -109,6 +178,7 @@ class GameControllerTest {
 
 
     @Test
+    @Transactional
     void should_get_single_game_by_id() throws Exception {
 
         //given
@@ -141,6 +211,7 @@ class GameControllerTest {
     }
 
     @Test
+    @Transactional
     void should_not_get_single_game_because_is_not_accepted() throws Exception {
         //given
         Game testGame = new Game();
