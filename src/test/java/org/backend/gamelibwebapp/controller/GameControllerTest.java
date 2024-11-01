@@ -44,6 +44,24 @@ class GameControllerTest {
         //then
 
     }
+    @Test
+    void should_not_add_new_game_cause_it_already_exists() throws Exception {
+
+        //given
+        Game testGame = new Game();
+        testGame.setTitle("Test game");
+        testGame.setAccepted(true);
+        gameRepository.save(testGame);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/games/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"imageUrl\":\"test\"}"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isConflict())
+                .andExpect(MockMvcResultMatchers.content().string("Game \"Test game\" already exists."));
+        //then
+
+    }
 
 
     @Test
