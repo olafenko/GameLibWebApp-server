@@ -6,15 +6,21 @@ import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -22,12 +28,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 @ActiveProfiles("test")
+@Testcontainers
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class GameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private GameRepository gameRepository;
+
+    @Container
+    static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:latest")
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
+
+
+    @DynamicPropertySource
+    static void setDatasourceProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mysqlContainer::getUsername);
+        registry.add("spring.datasource.password", mysqlContainer::getPassword);
+    }
+
+
 
     @Test
     @Transactional
@@ -153,7 +177,7 @@ class GameControllerTest {
     }
     @Test
     @Transactional
-    void should_top_three_games() throws Exception {
+    void should_get_top_three_games() throws Exception {
         //given
         Game testGame1 = new Game();
         testGame1.setAccepted(true);
@@ -161,13 +185,16 @@ class GameControllerTest {
         testGame2.setAccepted(true);
         Game testGame3 = new Game();
         testGame3.setAccepted(true);
+        Game testGame4 = new Game();
+        testGame4.setAccepted(true);
 
         gameRepository.save(testGame1);
         gameRepository.save(testGame2);
         gameRepository.save(testGame3);
+        gameRepository.save(testGame4);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/all"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/games/top-three"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(3)));
