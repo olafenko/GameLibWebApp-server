@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -51,10 +52,13 @@ class GameControllerTest {
         registry.add("spring.datasource.password", mysqlContainer::getPassword);
     }
 
+    @BeforeEach
+    void setUp(){
+        gameRepository.deleteAll();
+    }
 
 
     @Test
-    @Transactional
     void should_add_new_game() throws Exception {
 
         //given
@@ -70,7 +74,6 @@ class GameControllerTest {
 
     }
     @Test
-    @Transactional
     void should_not_add_new_game_cause_it_already_exists() throws Exception {
 
         //given
@@ -90,7 +93,6 @@ class GameControllerTest {
     }
 
     @Test
-    @Transactional
     void should_update_game() throws Exception {
         //given
         Game testGame = new Game();
@@ -128,7 +130,6 @@ class GameControllerTest {
 
 
     @Test
-    @Transactional
     void should_delete_game() throws Exception {
         //given
         Game testGame = new Game();
@@ -156,7 +157,6 @@ class GameControllerTest {
 
 
     @Test
-    @Transactional
     void should_get_all_games() throws Exception {
         //given
         Game testGame1 = new Game();
@@ -176,7 +176,6 @@ class GameControllerTest {
         //then
     }
     @Test
-    @Transactional
     void should_get_top_three_games() throws Exception {
         //given
         Game testGame1 = new Game();
@@ -205,7 +204,6 @@ class GameControllerTest {
 
 
     @Test
-    @Transactional
     void should_get_single_game_by_id() throws Exception {
 
         //given
@@ -238,7 +236,6 @@ class GameControllerTest {
     }
 
     @Test
-    @Transactional
     void should_not_get_single_game_because_is_not_accepted() throws Exception {
         //given
         Game testGame = new Game();
