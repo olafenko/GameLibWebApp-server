@@ -1,6 +1,5 @@
 package org.backend.gamelibwebapp.controller;
 
-import jakarta.transaction.Transactional;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.hamcrest.Matchers;
