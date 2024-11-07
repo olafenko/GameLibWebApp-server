@@ -54,7 +54,7 @@ class GameControllerTest {
     }
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         gameRepository.deleteAll();
     }
 
@@ -74,6 +74,7 @@ class GameControllerTest {
         //then
 
     }
+
     @Test
     void should_not_add_new_game_cause_it_already_exists() throws Exception {
 
@@ -145,6 +146,7 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(testGame.getTitle() + " deleted successfully."));
         //then
     }
+
     @Test
     void should_not_delete_game_because_it_not_exist() throws Exception {
         //given
@@ -172,10 +174,11 @@ class GameControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/all"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(2)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
 
         //then
     }
+
     @Test
     void should_get_top_three_games() throws Exception {
         //given
@@ -197,11 +200,10 @@ class GameControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/top-three"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(3)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
 
         //then
     }
-
 
 
     @Test
@@ -217,7 +219,7 @@ class GameControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/" + testGame.getId()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.title",Matchers.is("Test")));
+                .andExpect(jsonPath("$.title", Matchers.is("Test")));
         //then
 
     }

@@ -50,7 +50,6 @@ class AuthControllerTest {
             .withPassword("test");
 
 
-
     @DynamicPropertySource
     static void setDatasourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
@@ -104,6 +103,7 @@ class AuthControllerTest {
 
         //then
     }
+
     @Test
     void should_not_register_new_user_because_username_is_taken() throws Exception {
 

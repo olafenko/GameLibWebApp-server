@@ -22,39 +22,38 @@ public class GameController {
     private final GameService gameService;
 
     @PostMapping("add")
-    public ResponseEntity<Game> addGame(@RequestBody GameAddRequest request){
-        log.info("Adding new game {}",request.title());
+    public ResponseEntity<Game> addGame(@RequestBody GameAddRequest request) {
+        log.info("Adding new game {}", request.title());
         return ResponseEntity.status(HttpStatus.CREATED).body(gameService.addGame(request));
     }
 
     @GetMapping("all")
-    public ResponseEntity<List<GameDTO>> showAllGames(){
+    public ResponseEntity<List<GameDTO>> showAllGames() {
         return ResponseEntity.ok(gameService.getAcceptedGames());
     }
 
     @GetMapping("top-three")
-    public ResponseEntity<List<GameDTO>> showTopThreeGames(){
+    public ResponseEntity<List<GameDTO>> showTopThreeGames() {
         return ResponseEntity.ok(gameService.getTopThreeGames());
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<GameDTO> updateById(@PathVariable("id") Long id, @RequestBody UpdateRequest request){
-        log.info("Updating game with id {}",id);
-        return ResponseEntity.ok(gameService.updateGameById(id,request));
+    public ResponseEntity<GameDTO> updateById(@PathVariable("id") Long id, @RequestBody UpdateRequest request) {
+        log.info("Updating game with id {}", id);
+        return ResponseEntity.ok(gameService.updateGameById(id, request));
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deleteById (@PathVariable("id") Long id){
-        log.info("Deleting game with id {}",id);
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+        log.info("Deleting game with id {}", id);
         return ResponseEntity.ok(gameService.deleteGameById(id));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GameDTO> getById(@PathVariable("id") Long id){
-        log.info("Getting game with id {}",id);
+    public ResponseEntity<GameDTO> getById(@PathVariable("id") Long id) {
+        log.info("Getting game with id {}", id);
         return ResponseEntity.ok(gameService.getGame(id));
     }
-
 
 
 }

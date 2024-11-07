@@ -306,7 +306,7 @@ class GameServiceTest {
     }
 
     @Test
-    void should_get_top_three_games_by_average_rating(){
+    void should_get_top_three_games_by_average_rating() {
 
         //given
         Game game1 = mock(Game.class);

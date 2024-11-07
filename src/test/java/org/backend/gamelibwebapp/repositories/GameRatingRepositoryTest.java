@@ -28,7 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class GameRatingRepositoryTest {
 
     @Autowired
-    private  GameRatingRepository underTestRepository;
+    private GameRatingRepository underTestRepository;
 
     @Autowired
     private GameRepository gameRepository;
@@ -51,7 +51,7 @@ class GameRatingRepositoryTest {
 
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         underTestRepository.deleteAll();
         gameRepository.deleteAll();
         appUserRepository.deleteAll();
@@ -62,10 +62,10 @@ class GameRatingRepositoryTest {
 
         //given
 
-        AppUser testUser = new AppUser(1L,null, null, null, null);
+        AppUser testUser = new AppUser(1L, null, null, null, null);
         appUserRepository.save(testUser);
 
-        Game testGame = new Game(1L,null, null, null, null, false);
+        Game testGame = new Game(1L, null, null, null, null, false);
         gameRepository.save(testGame);
 
         GameRating testRating = new GameRating(null, 0, testUser, testGame);
@@ -85,7 +85,7 @@ class GameRatingRepositoryTest {
         //given
         //when
         //then
-        assertThatThrownBy( () -> underTestRepository.getUserRating(0L, 0L).get())
+        assertThatThrownBy(() -> underTestRepository.getUserRating(0L, 0L).get())
                 .isInstanceOf(NoSuchElementException.class);
 
     }

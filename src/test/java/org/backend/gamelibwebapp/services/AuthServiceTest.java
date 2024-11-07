@@ -62,6 +62,7 @@ class AuthServiceTest {
         assertThat(appUserArgumentCaptor.getValue().getPassword()).isEqualTo("password");
 
     }
+
     @Test
     void should_not_register_new_user_and_throw_exception_because_email_is_taken() {
 
@@ -77,6 +78,7 @@ class AuthServiceTest {
         verify(appUserRepository, never()).save(any(AppUser.class));
 
     }
+
     @Test
     void should_not_register_new_user_and_throw_exception_because_username_is_taken() {
 
@@ -114,6 +116,7 @@ class AuthServiceTest {
         verify(authenticationManager).authenticate(new UsernamePasswordAuthenticationToken(testRequest.username(), testRequest.password()));
 
     }
+
     @Test
     void should_not_login_user_and_throw_exception_because_username_not_found() {
 

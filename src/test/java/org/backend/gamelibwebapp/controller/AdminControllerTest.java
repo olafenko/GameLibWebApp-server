@@ -24,7 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "admin",roles = {"ADMIN"})
+@WithMockUser(username = "admin", roles = {"ADMIN"})
 @ActiveProfiles("test")
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -51,7 +51,7 @@ class AdminControllerTest {
     }
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         gameRepository.deleteAll();
     }
 
@@ -97,6 +97,7 @@ class AdminControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.accepted", Matchers.equalTo(true)));
         //then
     }
+
     @Test
     void should_not_accept_game_because_it_not_exist() throws Exception {
 
@@ -124,6 +125,7 @@ class AdminControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(testGame.getTitle() + " deleted successfully."));
         //then
     }
+
     @Test
     void should_not_reject_game_because_it_not_exist() throws Exception {
         //given
