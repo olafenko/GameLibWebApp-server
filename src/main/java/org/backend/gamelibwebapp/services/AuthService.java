@@ -24,7 +24,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
-    public AuthResponse register(RegistrationRequest request) {
+    public String register(RegistrationRequest request) {
 
         if (appUserRepository.existsByEmail(request.email())) {
             throw new ResourceAlreadyExistsException("Email is already taken!");
@@ -43,9 +43,8 @@ public class AuthService {
 
         appUserRepository.save(user);
 
-        String jwt = jwtService.generateToken(user);
 
-        return new AuthResponse(jwt);
+        return "Registered successfully! Now u can log in using your credentials.";
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
