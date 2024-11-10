@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GameRatingRepository extends JpaRepository<GameRating,Long> {
+public interface GameRatingRepository extends JpaRepository<GameRating, Long> {
 
     @Query(value = "select * from game_ratings where user_id=:user_id and game_id=:game_id", nativeQuery = true)
-    Optional<GameRating> getUserRating(@Param("user_id") Long user_id,@Param("game_id") Long game_id);
+    Optional<GameRating> getUserRating(@Param("user_id") Long user_id, @Param("game_id") Long game_id);
 
-    @Query(value = "select * from game_ratings where game_id=:game_id",nativeQuery = true)
+    @Query(value = "select * from game_ratings where game_id=:game_id", nativeQuery = true)
     List<GameRating> getRatingsByGameId(@Param("game_id") Long game_id);
 
 }

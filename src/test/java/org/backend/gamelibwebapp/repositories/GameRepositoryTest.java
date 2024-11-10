@@ -39,7 +39,6 @@ class GameRepositoryTest {
     }
 
 
-
     @AfterEach
     void tearDown() {
         underTestGameRepository.deleteAll();
@@ -50,13 +49,14 @@ class GameRepositoryTest {
 
         //given
         String title = "Gothic";
-        Game game = new Game(null,"Gothic",null,null,null,true);
+        Game game = new Game(null, "Gothic", null,null, null, null, true);
         underTestGameRepository.save(game);
         //when
         boolean result = underTestGameRepository.existsByTitle(title);
         //then
         assertThat(result).isTrue();
     }
+
     @Test
     void it_should_check_if_game_exists_by_title_and_return_false() {
 

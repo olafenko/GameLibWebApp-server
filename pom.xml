@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.backend</groupId>
-    <artifactId>GameLibWebApp</artifactId>
+    <artifactId>GameLibWebApp-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>GameLibWebApp</name>
     <description>GameLibWebApp</description>

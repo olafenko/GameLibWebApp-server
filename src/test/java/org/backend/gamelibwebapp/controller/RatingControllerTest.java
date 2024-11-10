@@ -66,7 +66,6 @@ class RatingControllerTest {
     }
 
 
-
     @Test
     void should_add_new_rate() throws Exception {
 
@@ -81,13 +80,14 @@ class RatingControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings/rate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}",game.getId(),user.getId())))
+                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}", game.getId(), user.getId())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("4.0"));
 
         //then
     }
+
     @Test
     void should_not_add_new_rate_because_game_not_exist() throws Exception {
 
@@ -100,13 +100,14 @@ class RatingControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings/rate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}",999,user.getId())))
+                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}", 999, user.getId())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Game with id 999 not found"));
 
         //then
     }
+
     @Test
     void should_not_add_new_rate_because_user_not_exist() throws Exception {
 
@@ -120,13 +121,14 @@ class RatingControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings/rate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}",game.getId(),999)))
+                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}", game.getId(), 999)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("User with id 999 not found"));
 
         //then
     }
+
     @Test
     void should_not_add_new_rate_because_game_is_not_accepted() throws Exception {
 
@@ -142,7 +144,7 @@ class RatingControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings/rate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}",game.getId(),user.getId())))
+                        .content(String.format("{\"value\":4.0,\"gameId\":%d,\"userId\":%s}", game.getId(), user.getId())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andExpect(MockMvcResultMatchers.content().string("Cannot rate not accepted game."));
@@ -170,7 +172,7 @@ class RatingControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings/rate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(String.format("{\"value\":5.0,\"gameId\":%d,\"userId\":%s}",game.getId(),user.getId())))
+                        .content(String.format("{\"value\":5.0,\"gameId\":%d,\"userId\":%s}", game.getId(), user.getId())))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("5.0"));

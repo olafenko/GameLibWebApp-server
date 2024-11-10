@@ -18,18 +18,18 @@ public class AdminController {
     private final GameService gameService;
 
     @GetMapping("to-accept")
-    public ResponseEntity<List<Game>> getGamesToAccept(){
+    public ResponseEntity<List<Game>> getGamesToAccept() {
         return ResponseEntity.ok(gameService.getGamesToAccept());
     }
 
     @PostMapping("accept/{id}")
-    public ResponseEntity<Game> acceptGame(@PathVariable("id") Long id){
+    public ResponseEntity<Game> acceptGame(@PathVariable("id") Long id) {
         return ResponseEntity.ok(gameService.acceptGame(id));
     }
 
     @DeleteMapping("reject/{id}")
-    public ResponseEntity<String> rejectGame (@PathVariable("id") Long id){
-        log.info("Rejecting game with id {}",id);
+    public ResponseEntity<String> rejectGame(@PathVariable("id") Long id) {
+        log.info("Rejecting game with id {}", id);
         return ResponseEntity.ok(gameService.deleteGameById(id));
     }
 

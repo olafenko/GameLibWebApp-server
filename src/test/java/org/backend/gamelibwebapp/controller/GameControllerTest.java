@@ -54,7 +54,7 @@ class GameControllerTest {
     }
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         gameRepository.deleteAll();
     }
 
@@ -67,13 +67,14 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/games/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"imageUrl\":\"test\"}"))
+                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"description\":\"test\",\"imageUrl\":\"test\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Test game"));
         //then
 
     }
+
     @Test
     void should_not_add_new_game_cause_it_already_exists() throws Exception {
 
@@ -85,7 +86,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/games/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"imageUrl\":\"test\"}"))
+                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"description\":\"test\",\"imageUrl\":\"test\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().string("Game \"Test game\" already exists."));
@@ -104,7 +105,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/games/update/" + testGame.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"imageUrl\":\"test 2\"}"))
+                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"description\":\"test\",\"imageUrl\":\"test 2\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(Matchers.is("Test game 2")))
@@ -121,7 +122,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/games/update/999")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"imageUrl\":\"test 2\"}"))
+                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"description\":\"test\",\"imageUrl\":\"test 2\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Game with id 999 not found"));
@@ -145,6 +146,7 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(testGame.getTitle() + " deleted successfully."));
         //then
     }
+
     @Test
     void should_not_delete_game_because_it_not_exist() throws Exception {
         //given
@@ -172,10 +174,11 @@ class GameControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/all"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(2)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
 
         //then
     }
+
     @Test
     void should_get_top_three_games() throws Exception {
         //given
@@ -197,11 +200,10 @@ class GameControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/top-three"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$",Matchers.hasSize(3)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
 
         //then
     }
-
 
 
     @Test
@@ -217,7 +219,7 @@ class GameControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/games/" + testGame.getId()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.title",Matchers.is("Test")));
+                .andExpect(jsonPath("$.title", Matchers.is("Test")));
         //then
 
     }
