@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.result.StatusResultMatchersExtensionsKt.isEqualTo;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -47,18 +48,17 @@ class AuthServiceTest {
         given(appUserRepository.existsByUsername(anyString())).willReturn(false);
         given(appUserRepository.existsByEmail(anyString())).willReturn(false);
         given(passwordEncoder.encode(anyString())).willReturn("password");
-        given(jwtService.generateToken(any(AppUser.class))).willReturn("jwt");
 
         RegistrationRequest testRequest = new RegistrationRequest("test", "test@gmail.com", "test");
 
         //when
-        AuthResponse response = underTestService.register(testRequest);
+        String response = underTestService.register(testRequest);
 
         //then
         ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
         verify(appUserRepository).save(appUserArgumentCaptor.capture());
         assertThat(response).isNotNull();
-        assertThat(response.token()).isEqualTo("jwt");
+        assertThat(response).isEqualTo("Registered successfully! Now u can log in using your credentials.");
         assertThat(appUserArgumentCaptor.getValue().getPassword()).isEqualTo("password");
 
     }

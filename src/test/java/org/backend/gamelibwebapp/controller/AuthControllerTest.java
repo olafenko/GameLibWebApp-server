@@ -68,17 +68,16 @@ class AuthControllerTest {
         //given
 
         //when
-        MvcResult loginResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
+         mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"test\",\"email\":\"test@test.com\",\"password\":\"test\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
+                .andExpect(MockMvcResultMatchers.content().string("Registered successfully! Now u can log in using your credentials."));
 
-        String token = loginResult.getResponse().getContentAsString();
+
         //then
-        assertThat(token).isNotEmpty();
-        assertThat(token).isNotBlank();
+
     }
 
     @Test
