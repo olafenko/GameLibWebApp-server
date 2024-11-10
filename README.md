@@ -44,4 +44,8 @@ All API endpoints start with the prefix `/api/`.
 - `GET /api/games/all` - Displays all approved games
 - `GET /api/games/top-three` - Displays the top three highest-rated games
 - `PUT /api/games/update/{id}` - Updates game details (for logged-in users; requires admin approval)
-- `DELETE /api
+- `DELETE /api/admin/reject/{id}` - Rejects and deletes the selected game
+
+### Ratings (`/api/ratings`)
+
+- `POST /api/ratings/rate` - Adds or updates a game rating (for logged-in users)
