@@ -20,6 +20,7 @@ public class GameDTOMapper implements Function<Game, GameDTO> {
                 .title(game.getTitle())
                 .producer(game.getProducer())
                 .categories(game.getGameCategory())
+                .description(game.getDescription())
                 .imageUrl(game.getImageUrl())
                 .rating(ratingService.getAverageRating(game.getId()))
                 .build();

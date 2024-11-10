@@ -23,6 +23,7 @@ public class Game {
     @Enumerated(value = EnumType.STRING)
     private List<GameCategory> gameCategory;
     private String imageUrl;
+    private String description;
     private boolean isAccepted;
 
 

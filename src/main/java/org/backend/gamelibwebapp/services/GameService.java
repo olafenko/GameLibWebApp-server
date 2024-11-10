@@ -47,6 +47,7 @@ public class GameService {
                 .title(gameAddRequest.title())
                 .producer(gameAddRequest.producer())
                 .gameCategory(gameAddRequest.gameCategories())
+                .description(gameAddRequest.description())
                 .imageUrl(gameAddRequest.imageUrl())
                 .isAccepted(false)
                 .build();
@@ -65,6 +66,7 @@ public class GameService {
         gameToUpdate.setProducer(updatedGame.producer());
         gameToUpdate.setGameCategory(updatedGame.gameCategories());
         gameToUpdate.setImageUrl(updatedGame.imageUrl());
+        gameToUpdate.setDescription(updatedGame.description());
 
         gameRepository.save(gameToUpdate);
 
