@@ -49,7 +49,7 @@ class GameRepositoryTest {
 
         //given
         String title = "Gothic";
-        Game game = new Game(null, "Gothic", null, null, null, true);
+        Game game = new Game(null, "Gothic", null,null, null, null, true);
         underTestGameRepository.save(game);
         //when
         boolean result = underTestGameRepository.existsByTitle(title);

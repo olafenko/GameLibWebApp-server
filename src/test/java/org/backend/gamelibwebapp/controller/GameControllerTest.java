@@ -67,7 +67,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/games/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"imageUrl\":\"test\"}"))
+                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"description\":\"test\",\"imageUrl\":\"test\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Test game"));
@@ -86,7 +86,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/games/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"imageUrl\":\"test\"}"))
+                        .content("{\"title\":\"Test game\",\"producer\":\"Test producer\",\"gameCategories\":[\"RPG\"],\"description\":\"test\",\"imageUrl\":\"test\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.content().string("Game \"Test game\" already exists."));
@@ -105,7 +105,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/games/update/" + testGame.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"imageUrl\":\"test 2\"}"))
+                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"description\":\"test\",\"imageUrl\":\"test 2\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(Matchers.is("Test game 2")))
@@ -122,7 +122,7 @@ class GameControllerTest {
         //when
         mockMvc.perform(MockMvcRequestBuilders.put("/api/games/update/999")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"imageUrl\":\"test 2\"}"))
+                        .content("{\"title\":\"Test game 2\",\"producer\":\"Test producer 2\",\"gameCategories\":[\"MOBA\"],\"description\":\"test\",\"imageUrl\":\"test 2\"}"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Game with id 999 not found"));
