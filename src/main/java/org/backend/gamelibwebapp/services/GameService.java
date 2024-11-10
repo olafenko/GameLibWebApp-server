@@ -67,6 +67,7 @@ public class GameService {
         gameToUpdate.setGameCategory(updatedGame.gameCategories());
         gameToUpdate.setImageUrl(updatedGame.imageUrl());
         gameToUpdate.setDescription(updatedGame.description());
+        gameToUpdate.setAccepted(false);
 
         gameRepository.save(gameToUpdate);
 
