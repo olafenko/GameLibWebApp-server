@@ -52,25 +52,10 @@ All API endpoints start with the prefix `/api/`.
 
 ## Testing
 
-### Running Tests Locally
-
 To run tests locally, you need Docker installed and running on your machine, as **Testcontainers** relies on Docker to manage services (such as MySQL) used during tests.
-
-1. Make sure Docker is installed and running on your local machine.
-2. Run the tests using your preferred method:
-    - If you are using Maven, run:
-      ```bash
-      mvn test
-      ```
-    - If you are using an IDE, you can run tests directly from the IDE (e.g., using JUnit test configurations).
 
 Testcontainers will automatically download the necessary Docker images (e.g., MySQL) and start containers for testing. Once the tests are completed, the containers will be stopped and removed.
 
 If Docker is not running, tests that require Testcontainers will fail.
 
-### Running Tests with Active Test Profile
 
-To run tests with the active `test` profile, ensure that you specify the active profile for Spring in your tests:
-
-```bash
-mvn test -Dspring.profiles.active=test

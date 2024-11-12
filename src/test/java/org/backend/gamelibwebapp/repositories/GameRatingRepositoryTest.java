@@ -1,9 +1,9 @@
 package org.backend.gamelibwebapp.repositories;
 
+import jakarta.transaction.Transactional;
 import org.backend.gamelibwebapp.entities.AppUser;
 import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.entities.GameRating;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -49,15 +49,8 @@ class GameRatingRepositoryTest {
         registry.add("spring.datasource.password", mysqlContainer::getPassword);
     }
 
-
-    @BeforeEach
-    void setUp() {
-        underTestRepository.deleteAll();
-        gameRepository.deleteAll();
-        appUserRepository.deleteAll();
-    }
-
     @Test
+    @Transactional
     void should_get_user_rating_by_game_and_user_id_and_return_game_rating_class() {
 
         //given
