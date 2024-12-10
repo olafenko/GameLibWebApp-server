@@ -8,6 +8,7 @@ import org.backend.gamelibwebapp.entities.Game;
 import org.backend.gamelibwebapp.exception.CannotPerformActionException;
 import org.backend.gamelibwebapp.exception.ResourceAlreadyExistsException;
 import org.backend.gamelibwebapp.exception.ResourceNotFoundException;
+import org.backend.gamelibwebapp.mappers.GameDTOMapper;
 import org.backend.gamelibwebapp.repositories.GameRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +20,21 @@ import java.util.List;
 public class GameService {
 
     private final GameRepository gameRepository;
-    private final GameRatingService ratingService;
+    private final GameDTOMapper mapper;
     private final String GAME_NOT_FOUND_MESSAGE = "Game with id %s not found";
 
-    //SHOW ALL ACCEPTED GAMES FOR USER USAGE
-    public List<GameDTO> showAcceptedGames() {
-        List<Game> accepted = gameRepository.getAccepted();
-        return mapAllGamesToResponse(accepted);
+    public List<GameDTO> getAcceptedGames() {
+        return gameRepository.findAll().stream()
+                .filter(Game::isAccepted)
+                .map(mapper)
+                .toList();
     }
 
-    public List<Game> showGamesToAccept() {
-        return gameRepository.getNotAccepted();
+    //ONLY FOR ADMIN USAGE
+    public List<Game> getGamesToAccept() {
+        return gameRepository.findAll().stream()
+                .filter(game -> !game.isAccepted())
+                .toList();
     }
 
     public Game addGame(GameAddRequest gameAddRequest) {
@@ -42,6 +47,7 @@ public class GameService {
                 .title(gameAddRequest.title())
                 .producer(gameAddRequest.producer())
                 .gameCategory(gameAddRequest.gameCategories())
+                .description(gameAddRequest.description())
                 .imageUrl(gameAddRequest.imageUrl())
                 .isAccepted(false)
                 .build();
@@ -60,10 +66,12 @@ public class GameService {
         gameToUpdate.setProducer(updatedGame.producer());
         gameToUpdate.setGameCategory(updatedGame.gameCategories());
         gameToUpdate.setImageUrl(updatedGame.imageUrl());
+        gameToUpdate.setDescription(updatedGame.description());
+        gameToUpdate.setAccepted(false);
 
         gameRepository.save(gameToUpdate);
 
-        return mapToGameResponse(gameToUpdate);
+        return mapper.apply(gameToUpdate);
     }
 
     //ADMIN USAGE
@@ -85,9 +93,10 @@ public class GameService {
             throw new CannotPerformActionException("Cannot get not accepted game");
         }
 
-        return mapToGameResponse(game);
+        return mapper.apply(game);
     }
 
+    //ADMIN USAGE
     public Game acceptGame(Long id) {
         Game gameById = gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(GAME_NOT_FOUND_MESSAGE, id)));
         gameById.setAccepted(true);
@@ -98,32 +107,12 @@ public class GameService {
 
     public List<GameDTO> getTopThreeGames() {
 
-        List<Game> acceptedGames = gameRepository.getAccepted();
-        List<GameDTO> allGames = mapAllGamesToResponse(acceptedGames);
-
-        return allGames.stream()
-                .sorted(Comparator.comparing(GameDTO::rating))
+        return gameRepository.findAll().stream()
+                .filter(Game::isAccepted)
+                .map(mapper)
+                .sorted(Comparator.comparing(GameDTO::rating).reversed())
                 .limit(3)
                 .toList();
-
     }
 
-    private GameDTO mapToGameResponse(Game game) {
-
-        return GameDTO.builder()
-                .title(game.getTitle())
-                .producer(game.getProducer())
-                .categories(game.getGameCategory())
-                .imageUrl(game.getImageUrl())
-                .rating(ratingService.getAverageRating(game.getId()))
-                .build();
-
-    }
-
-    private List<GameDTO> mapAllGamesToResponse(List<Game> games) {
-
-        return games.stream()
-                .map(this::mapToGameResponse)
-                .toList();
-    }
 }

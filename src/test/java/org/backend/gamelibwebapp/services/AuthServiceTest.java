@@ -47,21 +47,21 @@ class AuthServiceTest {
         given(appUserRepository.existsByUsername(anyString())).willReturn(false);
         given(appUserRepository.existsByEmail(anyString())).willReturn(false);
         given(passwordEncoder.encode(anyString())).willReturn("password");
-        given(jwtService.generateToken(any(AppUser.class))).willReturn("jwt");
 
         RegistrationRequest testRequest = new RegistrationRequest("test", "test@gmail.com", "test");
 
         //when
-        AuthResponse response = underTestService.register(testRequest);
+        String response = underTestService.register(testRequest);
 
         //then
         ArgumentCaptor<AppUser> appUserArgumentCaptor = ArgumentCaptor.forClass(AppUser.class);
         verify(appUserRepository).save(appUserArgumentCaptor.capture());
         assertThat(response).isNotNull();
-        assertThat(response.token()).isEqualTo("jwt");
+        assertThat(response).isEqualTo("Registered successfully! Now u can log in using your credentials.");
         assertThat(appUserArgumentCaptor.getValue().getPassword()).isEqualTo("password");
 
     }
+
     @Test
     void should_not_register_new_user_and_throw_exception_because_email_is_taken() {
 
@@ -77,6 +77,7 @@ class AuthServiceTest {
         verify(appUserRepository, never()).save(any(AppUser.class));
 
     }
+
     @Test
     void should_not_register_new_user_and_throw_exception_because_username_is_taken() {
 
@@ -114,6 +115,7 @@ class AuthServiceTest {
         verify(authenticationManager).authenticate(new UsernamePasswordAuthenticationToken(testRequest.username(), testRequest.password()));
 
     }
+
     @Test
     void should_not_login_user_and_throw_exception_because_username_not_found() {
 

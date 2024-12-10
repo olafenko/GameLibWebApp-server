@@ -23,12 +23,12 @@ public class GameRatingService {
     private final GameRepository gameRepository;
     private final GameRatingRepository ratingRepository;
 
-    public GameRating rateGame(RatingRequest request){
+    public GameRating rateGame(RatingRequest request) {
 
         AppUser userById = userRepository.findById(request.userId()).orElseThrow(() -> new ResourceNotFoundException("User with id " + request.userId() + " not found"));
         Game gameById = gameRepository.findById(request.gameId()).orElseThrow(() -> new ResourceNotFoundException("Game with id " + request.gameId() + " not found"));
 
-        if (!gameById.isAccepted()){
+        if (!gameById.isAccepted()) {
             throw new CannotPerformActionException("Cannot rate not accepted game.");
         }
 
@@ -51,7 +51,7 @@ public class GameRatingService {
 
     }
 
-    public Double getAverageRating(Long id){
+    public Double getAverageRating(Long id) {
         double average = ratingRepository.getRatingsByGameId(id).stream()
                 .mapToDouble(GameRating::getRate)
                 .average()
@@ -63,8 +63,8 @@ public class GameRatingService {
     }
 
 
-    private boolean checkIfRated(Long userId,Long gameId){
-        return ratingRepository.getUserRating(userId,gameId).isPresent();
+    private boolean checkIfRated(Long userId, Long gameId) {
+        return ratingRepository.getUserRating(userId, gameId).isPresent();
     }
 
 }

@@ -4,5 +4,5 @@ import org.backend.gamelibwebapp.entities.enums.GameCategory;
 
 import java.util.List;
 
-public record UpdateRequest(String title, String producer, List<GameCategory> gameCategories, String imageUrl) {
+public record UpdateRequest(String title, String producer, List<GameCategory> gameCategories,String description, String imageUrl) {
 }
