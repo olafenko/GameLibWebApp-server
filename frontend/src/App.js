@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+    const loginReqBody = {
+        "username" : "admin",
+        "password" : "admin",
+    }
+
+    fetch("http://localhost:8080/api/auth/login",{
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        method : "post",
+        body : JSON.stringify(loginReqBody)
+    }).then((response) => Promise.all([response.text(),response.headers]))
+        .then(([text,headers]) => {
+            console.log(text);
+            console.log(headers.get("Authorization"))
+        });
+
+
+    return (
+        <div className="app">
+        SIEMA
+        </div>
+    );
 }
 
 export default App;
