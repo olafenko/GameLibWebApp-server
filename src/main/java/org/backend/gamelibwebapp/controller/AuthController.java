@@ -6,6 +6,7 @@ import org.backend.gamelibwebapp.dto.AuthResponse;
 import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.services.AuthService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,9 +28,9 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         log.info("Login user: {}", request.username());
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, authService.login(request).token()).body("Logged in as " + request.username());
     }
 
 }
