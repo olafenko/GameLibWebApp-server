@@ -44,7 +44,7 @@ public class AuthService {
         appUserRepository.save(user);
 
 
-        return "Registered successfully! Now u can log in using your credentials.";
+        return "Registered successfully! Now u can log in by using your credentials.";
     }
 
     public AuthResponse login(LoginRequest loginRequest) {

@@ -2,10 +2,10 @@ package org.backend.gamelibwebapp.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.backend.gamelibwebapp.dto.AuthResponse;
 import org.backend.gamelibwebapp.dto.LoginRequest;
 import org.backend.gamelibwebapp.dto.RegistrationRequest;
 import org.backend.gamelibwebapp.services.AuthService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,9 +27,12 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         log.info("Login user: {}", request.username());
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, authService.login(request).token())
+                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,"Authorization")
+                .body("Logged in as " + request.username());
     }
 
 }
